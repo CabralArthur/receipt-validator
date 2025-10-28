@@ -1,26 +1,14 @@
 import { useState } from "react";
-import { Mail, Plus, Trash2, Loader2, CheckCircle, AlertCircle, Copy } from "lucide-react";
+import { Mail, Loader2, CheckCircle, AlertCircle, Copy } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useSettingsContainer from "./Settings.container";
-import { CreateAliasModal, DeleteConfirmModal } from "./";
 
 export default function EmailTab() {
   const {
     aliases,
     aliasesLoading,
     aliasesError,
-    isCreatingAlias,
-    isDeletingAlias,
-    createAliasError,
-    deleteAliasError,
-    isCreateAliasModalOpen,
-    isDeleteAliasModalOpen,
-    handleCreateAlias,
-    handleDeleteAlias,
-    openDeleteAliasModal,
-    closeModals,
-    setIsCreateAliasModalOpen,
   } = useSettingsContainer();
 
   const [copiedAlias, setCopiedAlias] = useState<string | null>(null);
@@ -66,16 +54,9 @@ export default function EmailTab() {
             Endereços de Email
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm">
-            Gerencie os endereços de email para recebimento de documentos
+            Visualize os endereços de email para recebimento de documentos
           </p>
         </div>
-        <Button 
-          className="flex items-center gap-2"
-          onClick={() => setIsCreateAliasModalOpen(true)}
-        >
-          <Plus className="h-4 w-4" />
-          Adicionar Email
-        </Button>
       </div>
 
       {/* Info Card */}
@@ -85,11 +66,12 @@ export default function EmailTab() {
             <CheckCircle className="h-5 w-5 text-blue-500 mt-0.5" />
             <div>
               <h3 className="font-medium text-blue-900 dark:text-blue-100">
-                Como funciona?
+                Endereços de Email
               </h3>
               <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                Os endereços de email permitem que você receba documentos em endereços específicos. 
-                Cada e-mail criado será um ponto de entrada para documentos que serão processados automaticamente.
+                Visualize os endereços de email disponíveis para recebimento de documentos.
+                Os endereços de email para recebimento de documentos são criados pela nossa equipe.
+                <br/>Se precisar de mais endereços, entre em contato conosco.
               </p>
             </div>
           </div>
@@ -101,23 +83,25 @@ export default function EmailTab() {
         <CardHeader>
           <CardTitle>Seus Emails</CardTitle>
           <CardDescription>
-            Gerencie os endereços de email para recebimento de documentos
+            Visualize os endereços de email para recebimento de documentos
           </CardDescription>
         </CardHeader>
         <CardContent>
           {aliases.length === 0 ? (
-            <div className="text-center py-12">
-              <Mail className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">
-                Nenhum email encontrado
+            <div className="text-center py-16">
+              {/* Icon */}
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Mail className="h-8 w-8 text-slate-400" />
+              </div>
+
+              {/* Main Message */}
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+                Nenhum endereço de email encontrado
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-4">
-                Comece criando seu primeiro email
+              
+              <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+                Os endereços de email para recebimento de documentos aparecerão aqui quando forem criados pela nossa equipe.
               </p>
-              <Button onClick={() => setIsCreateAliasModalOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Criar Primeiro Email
-              </Button>
             </div>
           ) : (
             <div className="space-y-4">
@@ -154,15 +138,6 @@ export default function EmailTab() {
                         <Copy className="h-4 w-4" />
                       )}
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openDeleteAliasModal(alias.id)}
-                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                      title="Excluir alias"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               ))}
@@ -171,24 +146,6 @@ export default function EmailTab() {
         </CardContent>
       </Card>
 
-      {/* Modals */}
-      <CreateAliasModal
-        isOpen={isCreateAliasModalOpen}
-        onClose={() => setIsCreateAliasModalOpen(false)}
-        onSubmit={handleCreateAlias}
-        isLoading={isCreatingAlias}
-        error={createAliasError}
-      />
-
-      <DeleteConfirmModal
-        isOpen={isDeleteAliasModalOpen}
-        onClose={() => closeModals()}
-        onConfirm={handleDeleteAlias}
-        isLoading={isDeletingAlias}
-        error={deleteAliasError}
-        title="Excluir Endereço de Email"
-        description="Tem certeza que deseja excluir este endereço de email? Esta ação não pode ser desfeita."
-      />
     </div>
   );
 }
