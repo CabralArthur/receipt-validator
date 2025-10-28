@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '../App';
 
-import Home from '@features/Home';
+import Employees from '@/features/Employees';
 import Login from '@features/Login';
 import Signup from '@features/Signup';
 import ResetPassword from '@features/ResetPassword';
@@ -48,8 +48,8 @@ export const createRouter = () =>
                     element: <App />,
                     children: [
                         {
-                            path: "/home",
-                            element: <Home />,
+                            path: "/employees",
+                            element: <Employees />,
                         }
                     ],
                 }

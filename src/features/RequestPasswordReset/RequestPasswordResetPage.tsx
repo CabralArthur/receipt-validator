@@ -7,10 +7,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
-  CardTitle
+  CardHeader
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import Logo from "@/components/ui/logo";
 
 import useRequestPasswordResetPageContainer from "./RequestPasswordResetPage.container";
 export default function RequestPasswordReset() {
@@ -24,30 +24,13 @@ export default function RequestPasswordReset() {
   } = useRequestPasswordResetPageContainer();
 
   return (
-    <div className="flex min-h-screen flex-1">
-      <div className="w-full bg-slate-200 flex flex-col items-center justify-center antialiased relative hidden lg:block">
-        <div className="absolute inset-0">
-          <Waves
-            lineColor="rgba(0, 0, 0, 0.3)"
-            backgroundColor="transparent"
-            waveSpeedX={0.02}
-            waveSpeedY={0.01}
-            waveAmpX={40}
-            waveAmpY={20}
-            friction={0.9}
-            tension={0.01}
-            maxCursorMove={120}
-            xGap={12}
-            yGap={36}
-          />
-        </div>
-      </div>
+    <div className="flex min-h-screen items-center justify-center flex-1">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 lg:flex-none sm:px-6 lg:px-8">
         <Card className="md:min-w-[400px]">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-semibold">
-              Recuperar senha
-            </CardTitle>
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex justify-center mb-2">
+              <Logo size="md" />
+            </div>
             <CardDescription className="mt-2 text-sm text-muted-foreground">
               Digite seu e-mail e vamos te enviar um link para redefinir a senha.
             </CardDescription>

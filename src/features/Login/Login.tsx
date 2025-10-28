@@ -7,9 +7,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
-  CardTitle
+  CardHeader
 } from "@/components/ui/card";
+import Logo from "@/components/ui/logo";
 
 import useLoginPageContainer from "./Login.container";
 export default function LoginPage() {
@@ -30,10 +30,9 @@ export default function LoginPage() {
         <div className="mx-auto w-full max-w-sm min-w-[400px]">
           <Card className="md:min-w-[400px]">
             <CardHeader className="space-y-1 text-center">
-              <CardTitle className="text-2xl font-semibold">
-                valida
-                <span className="text-blue-500">.ai</span>
-              </CardTitle>
+              <div className="flex justify-center mb-2">
+                <Logo size="md" />
+              </div>
               <CardDescription>
                 Entre com seu e-mail e senha para acessar sua conta
               </CardDescription>

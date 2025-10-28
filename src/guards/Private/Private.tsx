@@ -20,7 +20,7 @@ export default function PrivateRouteGuard() {
   }
 
   if (pathname === "/") {
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/employees" replace />;
   }
 
   return <Outlet />;
