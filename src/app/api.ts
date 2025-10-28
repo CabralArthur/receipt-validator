@@ -1,5 +1,5 @@
 import { logout } from '@/utils/storage';
-import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 interface ImportMeta {
     env: {
@@ -9,7 +9,7 @@ interface ImportMeta {
 
 const client = axios.create({ baseURL: ((import.meta as unknown) as ImportMeta).env.VITE_API_URL });
 
-const TokenInterceptor = (config: AxiosRequestConfig): AxiosRequestConfig => {
+const TokenInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     if (config.headers) {
         config.headers.Authorization = `Bearer ${localStorage.token}`;
     }

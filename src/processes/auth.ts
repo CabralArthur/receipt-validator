@@ -5,10 +5,6 @@ interface LoginCredentials {
   password: string
 }
 
-interface SignupCredentials extends LoginCredentials {
-  name: string
-}
-
 interface User {
   id: string
   email: string
@@ -27,10 +23,6 @@ interface VerifyEmailResponse {
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     const { data } = await api.post<AuthResponse>('/auth/login', credentials)
     return data
-};
-
-export const signup = async (credentials: SignupCredentials): Promise<void> => {
-    await api.post('/auth/register', credentials)
 };
 
 export const resetPassword = async ({ password, confirmPassword, token }: { password: string, confirmPassword: string, token?: string }): Promise<void> => {
