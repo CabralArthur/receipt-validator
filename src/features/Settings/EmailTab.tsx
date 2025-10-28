@@ -59,25 +59,6 @@ export default function EmailTab() {
         </div>
       </div>
 
-      {/* Info Card */}
-      <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-3">
-            <CheckCircle className="h-5 w-5 text-blue-500 mt-0.5" />
-            <div>
-              <h3 className="font-medium text-blue-900 dark:text-blue-100">
-                Endereços de Email
-              </h3>
-              <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                Visualize os endereços de email disponíveis para recebimento de documentos.
-                Os endereços de email para recebimento de documentos são criados pela nossa equipe.
-                <br/>Se precisar de mais endereços, entre em contato conosco.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Aliases List */}
       <Card>
         <CardHeader>
@@ -88,20 +69,115 @@ export default function EmailTab() {
         </CardHeader>
         <CardContent>
           {aliases.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-6">
               {/* Icon */}
-              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Mail className="h-8 w-8 text-slate-400" />
+              <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Mail className="h-5 w-5 text-slate-400" />
               </div>
 
               {/* Main Message */}
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
-                Nenhum endereço de email encontrado
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                Aguardando criação do endereço de email
               </h3>
               
-              <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
-                Os endereços de email para recebimento de documentos aparecerão aqui quando forem criados pela nossa equipe.
+              <p className="text-slate-600 dark:text-slate-400 mb-4 max-w-md mx-auto text-sm">
+                Nossa equipe está criando um endereço de email exclusivo para você. 
+                Você será notificado por email quando estiver pronto!
               </p>
+
+              {/* Process Flow */}
+              <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 max-w-2xl mx-auto">
+                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 text-sm">
+                  Como funciona o processo
+                </h4>
+                
+                <div className="space-y-2">
+                  {/* Step 1 */}
+                  <div className="flex items-start gap-2">
+                    <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                      1
+                    </div>
+                    <div className="text-left">
+                      <h5 className="font-medium text-slate-900 dark:text-slate-100 text-xs">
+                        Cadastro realizado
+                      </h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        Sua conta foi criada com sucesso
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="flex items-start gap-2">
+                    <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                      2
+                    </div>
+                    <div className="text-left">
+                      <h5 className="font-medium text-slate-900 dark:text-slate-100 text-xs">
+                        Criação do endereço de email
+                      </h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        Nossa equipe está criando um endereço exclusivo para você
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="flex items-start gap-2">
+                    <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                      3
+                    </div>
+                    <div className="text-left">
+                      <h5 className="font-medium text-slate-900 dark:text-slate-100 text-xs">
+                        Notificação por email
+                      </h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        Você receberá um email quando o endereço estiver pronto
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 4 */}
+                  <div className="flex items-start gap-2">
+                    <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                      4
+                    </div>
+                    <div className="text-left">
+                      <h5 className="font-medium text-slate-900 dark:text-slate-100 text-xs">
+                        Conta ativa para recebimento
+                      </h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        Sua conta estará pronta para receber e processar documentos
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 5 */}
+                  <div className="flex items-start gap-2">
+                    <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                      5
+                    </div>
+                    <div className="text-left">
+                      <h5 className="font-medium text-slate-900 dark:text-slate-100 text-xs">
+                        Acompanhamento de status
+                      </h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        Você poderá acompanhar o status de cada documento processado
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Info */}
+                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center justify-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                    <Mail className="h-3 w-3" />
+                    <span>
+                      Precisa de ajuda? Entre em contato conosco
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
