@@ -47,6 +47,7 @@ export default function RequestPasswordResetPageContainer() {
         onSubmit, 
         isLoading: resetPasswordMutation.isPending,
         errorMsg,
-        successMsg
+        successMsg,
+        statusMsg: successMsg
     };
 }

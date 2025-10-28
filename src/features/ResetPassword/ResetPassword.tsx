@@ -1,13 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
 import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import useResetPasswordContainer from "./ResetPassword.container";
 
 export default function ResetPassword() {
     const {
-        validateToken,
         register,
         handleSubmit,
         errors,
@@ -16,68 +21,121 @@ export default function ResetPassword() {
         showPassword,
         setShowPassword,
         showConfirmPassword,
-        setShowConfirmPassword
+        setShowConfirmPassword,
+        errorMsg,
+        statusMsg,
+        isCheckingSession
     } = useResetPasswordContainer();
 
-    useEffect(() => {
-        validateToken();
-    }, [validateToken]);
+    if (isCheckingSession) {
+        return (
+            <div className="flex min-h-screen flex-1 items-center justify-center">
+                <div className="mx-auto w-full max-w-sm min-w-[400px]">
+                    <Card className="md:min-w-[400px]">
+                        <CardContent className="flex flex-col items-center justify-center py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4"></div>
+                            <p className="text-sm text-muted-foreground">Verificando sessão...</p>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        );
+    }
 
   return (
     <div className="flex min-h-screen flex-1 items-center justify-center">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold">Reset your password</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Enter your new password below
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col">
-              <Label className="mb-1" htmlFor="password">Password</Label>
+      <div className="mx-auto w-full max-w-sm min-w-[400px]">
+        <Card className="md:min-w-[400px]">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-semibold">
+              valida
+              <span className="text-blue-500">.ai</span>
+            </CardTitle>
+            <CardDescription>
+              Definir nova senha
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+              <div className="space-y-2">
+                <Label htmlFor="password">Nova senha</Label>
                 <div className="relative">
-                    <Input id="password" type={showPassword ? "text" : "password"} required {...register("password")} />
-                    <Button
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register("password")}
+                    aria-invalid={errors.password ? "true" : "false"}
+                  />
+                  <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-1 top-0.5 h-8 w-8 px-0"
+                    className="absolute right-2 top-1/2 -translate-y-1/2"
                     onClick={() => setShowPassword(!showPassword)}
-                    >
+                  >
                     {showPassword ? (
-                        <EyeOffIcon className="h-4 w-4" />
+                      <EyeOffIcon className="h-4 w-4" />
                     ) : (
-                        <EyeIcon className="h-4 w-4" />
+                      <EyeIcon className="h-4 w-4" />
                     )}
-                    </Button>
-                    {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+                  </Button>
                 </div>
-            </div>
-            <div className="flex flex-col">
-                <Label className="mb-1" htmlFor="confirmPassword">Confirm Password</Label>
+                {errors.password && (
+                  <p className="text-sm text-destructive">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirmar senha</Label>
                 <div className="relative">
-                    <Input id="confirmPassword" type={showConfirmPassword ? "text" : "password"} required {...register("confirmPassword")} />
-                    <Button
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register("confirmPassword")}
+                    aria-invalid={errors.confirmPassword ? "true" : "false"}
+                  />
+                  <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-1 top-0.5 h-8 w-8 px-0"
+                    className="absolute right-2 top-1/2 -translate-y-1/2"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
+                  >
                     {showConfirmPassword ? (
-                        <EyeOffIcon className="h-4 w-4" />
+                      <EyeOffIcon className="h-4 w-4" />
                     ) : (
-                        <EyeIcon className="h-4 w-4" />
+                      <EyeIcon className="h-4 w-4" />
                     )}
-                    </Button>
+                  </Button>
                 </div>
-            </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Resetting..." : "Reset Password"}
-          </Button>
-        </form>
+                {errors.confirmPassword && (
+                  <p className="text-sm text-destructive">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+              {errorMsg && (
+                <div className="rounded-md bg-red-50 p-4">
+                  <p className="text-sm text-red-800">{errorMsg}</p>
+                </div>
+              )}
+              {statusMsg && (
+                <div className="rounded-md bg-green-50 p-4">
+                  <p className="text-sm text-green-800">{statusMsg}</p>
+                </div>
+              )}
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Salvando..." : "Atualizar senha"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 }
+
 

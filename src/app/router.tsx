@@ -10,6 +10,7 @@ import RequestPasswordReset from '@features/RequestPasswordReset';
 
 import PublicRouteGuard from '@/guards/Public';
 import PrivateRouteGuard from '@/guards/Private';
+import ResetPasswordGuard from '@/guards/ResetPassword';
 
 export const createRouter = () =>
     createBrowserRouter([
@@ -25,12 +26,17 @@ export const createRouter = () =>
                     element: <Signup />,
                 },
                 {
-                    path: '/reset-password',
-                    element: <ResetPassword />,
-                },
-                {
                     path: '/request-password-reset',
                     element: <RequestPasswordReset />,
+                }
+            ]
+        },
+        {
+            element: <ResetPasswordGuard />,
+            children: [
+                {
+                    path: '/reset-password',
+                    element: <ResetPassword />,
                 }
             ]
         },

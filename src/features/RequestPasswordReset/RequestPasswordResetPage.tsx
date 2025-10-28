@@ -18,7 +18,9 @@ export default function RequestPasswordReset() {
     register,
     handleSubmit,
     onSubmit,
-    isLoading
+    isLoading,
+    errorMsg,
+    statusMsg
   } = useRequestPasswordResetPageContainer();
 
   return (
@@ -44,16 +46,16 @@ export default function RequestPasswordReset() {
         <Card className="md:min-w-[400px]">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-semibold">
-              Forgot your password?
+              Recuperar senha
             </CardTitle>
             <CardDescription className="mt-2 text-sm text-muted-foreground">
-              Enter your email to reset your password
+              Digite seu e-mail e vamos te enviar um link para redefinir a senha.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
@@ -61,14 +63,24 @@ export default function RequestPasswordReset() {
                   {...register("email")}
                 />
               </div>
+              {errorMsg && (
+                <div className="rounded-md bg-red-50 p-4">
+                  <p className="text-sm text-red-800">{errorMsg}</p>
+                </div>
+              )}
+              {statusMsg && (
+                <div className="rounded-md bg-green-50 p-4">
+                  <p className="text-sm text-green-800">{statusMsg}</p>
+                </div>
+              )}
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Sending..." : "Send Reset Link"}
+                {isLoading ? "Enviando..." : "Enviar link"}
               </Button>
               <div className="text-center">
                 <Button variant="link" asChild>
                   <Link to="/login">
                     <ArrowLeftIcon className="w-4 h-4 mr-2" />
-                    Back to Sign in
+                    Voltar ao login
                   </Link>
                 </Button>
               </div>
