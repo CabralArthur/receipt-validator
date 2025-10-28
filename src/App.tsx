@@ -1,13 +1,27 @@
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
 import { useUserStore } from "./stores/user.store";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "./processes/user";
 import useIsLogged from "./hooks/useIsLogged";
 import Logo from "./components/ui/logo";
+import Sidebar from "./components/ui/sidebar";
+import { Button } from "./components/ui/button";
+import { Menu } from "lucide-react";
 
 function App() {
   const { setUserInfo } = useUserStore();
   const { user } = useIsLogged();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
 
   const { isLoading } = useQuery({
     queryKey: ['user', user?.id],
@@ -65,7 +79,42 @@ function App() {
     );
   }
 
-  return <Outlet />;
+  return (
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-900">
+      {/* Sidebar */}
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        onToggle={toggleSidebar}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={toggleSidebarCollapse}
+      />
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
+        {/* Mobile header */}
+        <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            valid.ai
+          </h1>
+          <div className="w-8" /> {/* Spacer for centering */}
+        </div>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
 }
 
 export default App;
