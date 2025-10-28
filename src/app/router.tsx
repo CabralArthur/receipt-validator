@@ -2,7 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '../App';
 
-import Employees from '@/features/Employees';
+import Employees from '@/features/Employees/Employees';
+import Settings from '@/features/Settings/Settings';
 import Login from '@features/Login';
 import Signup from '@features/Signup';
 import ResetPassword from '@features/ResetPassword';
@@ -50,6 +51,10 @@ export const createRouter = () =>
                         {
                             path: "/employees",
                             element: <Employees />,
+                        },
+                        {
+                            path: "/settings",
+                            element: <Settings />,
                         }
                     ],
                 }
