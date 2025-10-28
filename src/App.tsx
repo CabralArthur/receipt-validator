@@ -3,21 +3,32 @@ import { useUserStore } from "./stores/user.store";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "./processes/user";
 import { Loader } from "lucide-react";
+import useIsLogged from "./hooks/useIsLogged";
 
 function App() {
   const { setUserInfo } = useUserStore();
+  const { user } = useIsLogged();
 
   const { isLoading } = useQuery({
-    queryKey: ['user'],
+    queryKey: ['user', user?.id],
     queryFn: async () => {
+      if (!user) return null;
+      
       const userInfo = await getUserInfo();
 
       if (userInfo) {
-        setUserInfo(userInfo);
+        // Transformar User para UserInfo
+        const userStoreInfo = {
+          id: userInfo.id,
+          email: userInfo.email,
+          name: userInfo.name
+        };
+        setUserInfo(userStoreInfo);
       }
 
       return userInfo;
     },
+    enabled: !!user, // Só executa se o usuário estiver logado
   });
 
   if (isLoading) {

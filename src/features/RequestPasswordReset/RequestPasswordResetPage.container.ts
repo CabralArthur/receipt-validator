@@ -1,15 +1,16 @@
 import * as yup from "yup";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { requestResetPassword } from "@/processes/auth";
+import { useMutation } from "@tanstack/react-query";
+import { requestPasswordReset } from "@/processes/auth";
 import { requestPasswordResetSchema } from "@/schemas/auth";
 
 type RequestPasswordResetFormData = yup.InferType<typeof requestPasswordResetSchema>;
 
 export default function RequestPasswordResetPageContainer() {
-    const [isLoading, setIsLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
     const { 
         register, 
@@ -19,19 +20,33 @@ export default function RequestPasswordResetPageContainer() {
         resolver: yupResolver(requestPasswordResetSchema)
     });
 
-    const onSubmit = async (data: RequestPasswordResetFormData) => {
-        try {
-            setIsLoading(true);
+    const resetPasswordMutation = useMutation({
+        mutationFn: async (data: RequestPasswordResetFormData) => {
+            await requestPasswordReset(data.email);
+        },
+        onSuccess: () => {
+            setErrorMsg(null);
+            setSuccessMsg("Email de redefinição enviado! Verifique sua caixa de entrada.");
+        },
+        onError: (error: Error) => {
+            setSuccessMsg(null);
+            setErrorMsg(error.message);
+        },
+    });
 
-            await requestResetPassword(data.email);
-
-            toast.success("Reset password request sent! Check your email for a link to reset your password.");
-        } catch (error) {
-            toast.error((error as Error).message || "Reset password request failed");
-        } finally {
-            setIsLoading(false);
-        }
+    const onSubmit = (data: RequestPasswordResetFormData) => {
+        setErrorMsg(null);
+        setSuccessMsg(null);
+        resetPasswordMutation.mutate(data);
     };
 
-    return { register, handleSubmit, errors, onSubmit, isLoading };
+    return { 
+        register, 
+        handleSubmit, 
+        errors, 
+        onSubmit, 
+        isLoading: resetPasswordMutation.isPending,
+        errorMsg,
+        successMsg
+    };
 }

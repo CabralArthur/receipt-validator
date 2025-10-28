@@ -1,22 +1,22 @@
 import * as yup from "yup";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 import { resetPasswordSchema } from "@/schemas/auth";
-import { resetPassword, validateResetPassword } from "@/processes/auth";
+import { updatePassword } from "@/processes/auth";
 
 type ResetPasswordFormData = yup.InferType<typeof resetPasswordSchema>;
 
 export default function ResetPasswordContainer() {
     const navigate = useNavigate();
-    const { token } = useParams();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [successMsg, setSuccessMsg] = useState<string | null>(null);
     
-    const [isLoading, setIsLoading] = useState(false);
     const { 
         register, 
         handleSubmit,
@@ -25,38 +25,40 @@ export default function ResetPasswordContainer() {
         resolver: yupResolver(resetPasswordSchema)
     });
 
-    const onSubmit = async (data: ResetPasswordFormData) => {
-        try {
-            setIsLoading(true);
-
-            await resetPassword({ password: data.password, confirmPassword: data.confirmPassword, token });
-
-            toast.success("Your password has been reset. Login to continue.");
-            navigate("/login");
-        } catch (error) {
-            toast.error((error as Error).message || "Reset password request failed");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const validateToken = async () => {
-        try {
-            if (!token) {
-                toast.error("Invalid or expired reset token");
+    const resetPasswordMutation = useMutation({
+        mutationFn: async (data: ResetPasswordFormData) => {
+            await updatePassword(data.password);
+        },
+        onSuccess: () => {
+            setErrorMsg(null);
+            setSuccessMsg("Senha redefinida com sucesso! Redirecionando para o login...");
+            setTimeout(() => {
                 navigate("/login");
-                return false;
-            }
-    
-            await validateResetPassword(token);
-    
-            return true;
-        } catch (error) {
-            toast.error((error as Error).message || "Invalid or expired reset token");
-            navigate("/login");
-            return false;
-        }
+            }, 2000);
+        },
+        onError: (error: Error) => {
+            setSuccessMsg(null);
+            setErrorMsg(error.message);
+        },
+    });
+
+    const onSubmit = (data: ResetPasswordFormData) => {
+        setErrorMsg(null);
+        setSuccessMsg(null);
+        resetPasswordMutation.mutate(data);
     };
 
-    return { validateToken, register, handleSubmit, errors, onSubmit, isLoading, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword };
+    return { 
+        register, 
+        handleSubmit, 
+        errors, 
+        onSubmit, 
+        isLoading: resetPasswordMutation.isPending, 
+        showPassword, 
+        setShowPassword, 
+        showConfirmPassword, 
+        setShowConfirmPassword,
+        errorMsg,
+        successMsg
+    };
 }

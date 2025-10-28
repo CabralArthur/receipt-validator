@@ -1,43 +1,29 @@
-import api from '@/app/api'
+import { supabase } from '@/lib/supabaseClient';
 
-interface LoginCredentials {
-  email: string
-  password: string
-}
-
-interface User {
-  id: string
-  email: string
-  name: string
-}
-
-interface AuthResponse {
-  token: string
-  user: User
-}
-
-interface VerifyEmailResponse {
-  success: boolean
-}
-
-export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const { data } = await api.post<AuthResponse>('/auth/login', credentials)
-    return data
+export const logout = async (): Promise<void> => {
+  const { error } = await supabase.auth.signOut();
+  
+  if (error) {
+    throw new Error(error.message);
+  }
 };
 
-export const resetPassword = async ({ password, confirmPassword, token }: { password: string, confirmPassword: string, token?: string }): Promise<void> => {
-    await api.post('/auth/reset-password', { password, confirmPassword, token })
+export const requestPasswordReset = async (email: string): Promise<void> => {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+  
+  if (error) {
+    throw new Error(error.message);
+  }
 };
 
-export const validateResetPassword = async (token: string): Promise<void> => {
-    await api.get('/auth/validate-reset-password', { params: { token } })
-};
-
-export const requestResetPassword = async (email: string): Promise<void> => {
-    await api.post('/auth/request-reset-password', { email })
-};
-
-export const verifyEmail = async (token: string): Promise<VerifyEmailResponse> => {
-    const { data } = await api.get<VerifyEmailResponse>('/auth/verify-email', { params: { token } })
-    return data
+export const updatePassword = async (password: string): Promise<void> => {
+  const { error } = await supabase.auth.updateUser({
+    password: password
+  });
+  
+  if (error) {
+    throw new Error(error.message);
+  }
 };
