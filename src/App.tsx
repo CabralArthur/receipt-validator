@@ -101,7 +101,7 @@ function App() {
             <Menu className="h-5 w-5" />
           </Button>
           <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            valid.ai
+            refund.ai
           </h1>
           <div className="w-8" /> {/* Spacer for centering */}
         </div>

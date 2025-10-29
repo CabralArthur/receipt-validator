@@ -19,10 +19,10 @@ export default function Logo({ size = 'md', className = '' }: LogoProps) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <div className={`${sizeClasses[size]} bg-blue-500 rounded-lg flex items-center justify-center`}>
-        <span className="text-white font-bold">V</span>
+        <span className="text-white font-bold">R</span>
       </div>
       <span className={`${textSizeClasses[size]} font-bold text-slate-700 dark:text-slate-200`}>
-        valid<span className="text-blue-500">.ai</span>
+        refund<span className="text-blue-500">.ai</span>
       </span>
     </div>
   );

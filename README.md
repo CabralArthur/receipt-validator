@@ -1,6 +1,6 @@
-# React SaaS Application Template
+# refund.ai
 
-A modern React SaaS application template with authentication flow, React Query for data fetching, and a beautiful UI using Tailwind CSS.
+A modern React SaaS application for receipt validation and refund processing with authentication flow, React Query for data fetching, and a beautiful UI using Tailwind CSS.
 
 ## Features
 
