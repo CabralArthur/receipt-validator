@@ -1,10 +1,10 @@
 import { Loader2 } from 'lucide-react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import useIsLogged from '@/hooks/useIsLogged';
 
 export default function ResetPasswordGuard() {
-    const { user, loading } = useIsLogged();
+    const { loading } = useIsLogged();
 
     if (loading) {
         return (

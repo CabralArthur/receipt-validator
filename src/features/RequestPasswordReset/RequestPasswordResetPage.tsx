@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Waves } from "@/components/ui/wave-background";
 import {
   Card,
   CardContent,

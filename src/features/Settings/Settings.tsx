@@ -1,5 +1,4 @@
 import { 
-  Settings as SettingsIcon, 
   User, 
   Mail
 } from "lucide-react";
