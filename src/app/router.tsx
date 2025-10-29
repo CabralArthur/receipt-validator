@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 
 import Employees from '@/features/Employees/Employees';
+import EmployeeDetail from '@/features/Employees/EmployeeDetail';
 import Settings from '@/features/Settings/Settings';
 import Login from '@features/Login';
 import Signup from '@features/Signup';
@@ -51,6 +52,10 @@ export const createRouter = () =>
                         {
                             path: "/employees",
                             element: <Employees />,
+                        },
+                        {
+                            path: "/employees/:id",
+                            element: <EmployeeDetail />,
                         },
                         {
                             path: "/settings",
