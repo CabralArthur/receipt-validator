@@ -2,7 +2,9 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '../App';
 
-import Home from '@features/Home';
+import Employees from '@/features/Employees/Employees';
+import EmployeeDetail from '@/features/Employees/EmployeeDetail';
+import Settings from '@/features/Settings/Settings';
 import Login from '@features/Login';
 import Signup from '@features/Signup';
 import ResetPassword from '@features/ResetPassword';
@@ -10,6 +12,7 @@ import RequestPasswordReset from '@features/RequestPasswordReset';
 
 import PublicRouteGuard from '@/guards/Public';
 import PrivateRouteGuard from '@/guards/Private';
+import ResetPasswordGuard from '@/guards/ResetPassword';
 
 export const createRouter = () =>
     createBrowserRouter([
@@ -25,12 +28,17 @@ export const createRouter = () =>
                     element: <Signup />,
                 },
                 {
-                    path: '/reset-password',
-                    element: <ResetPassword />,
-                },
-                {
                     path: '/request-password-reset',
                     element: <RequestPasswordReset />,
+                }
+            ]
+        },
+        {
+            element: <ResetPasswordGuard />,
+            children: [
+                {
+                    path: '/reset-password',
+                    element: <ResetPassword />,
                 }
             ]
         },
@@ -42,8 +50,16 @@ export const createRouter = () =>
                     element: <App />,
                     children: [
                         {
-                            path: "/home",
-                            element: <Home />,
+                            path: "/employees",
+                            element: <Employees />,
+                        },
+                        {
+                            path: "/employees/:id",
+                            element: <EmployeeDetail />,
+                        },
+                        {
+                            path: "/settings",
+                            element: <Settings />,
                         }
                     ],
                 }

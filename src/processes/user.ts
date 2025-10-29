@@ -1,26 +1,27 @@
-import api from '@/app/api'
-import { getToken } from '@/utils/storage'
+import { supabase } from '@/lib/supabaseClient';
 
 export interface User {
   id: string
   email: string
   name: string
-  isAdmin: boolean
-  permissions: object[]
-  team: {
-    plan_status: string
-  }
 }
 
 export const getUserInfo = async (): Promise<User | null> => {
   try {
-    if (!getToken()) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
       return null;
     }
 
-    const { data } = await api.get<User>('/user/info');
+    // Transformar dados do Supabase para o formato esperado
+    const userInfo: User = {
+      id: user.id,
+      email: user.email || '',
+      name: user.user_metadata?.full_name || user.email || '',
+    };
 
-    return data;
+    return userInfo;
   } catch {
     return null;
   }

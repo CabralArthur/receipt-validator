@@ -1,21 +1,19 @@
 import * as yup from "yup";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
 
-import { signup } from "@/processes/auth";
 import { signupSchema } from "@/schemas/auth";
+import { supabase } from "@/lib/supabaseClient";
 
 type SignupFormData = yup.InferType<typeof signupSchema>;
 
 export default function SignupContainer() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const { register, handleSubmit, formState: { errors } } = useForm<
     SignupFormData
@@ -23,30 +21,51 @@ export default function SignupContainer() {
     resolver: yupResolver(signupSchema)
   });
 
-  const { mutate: signupFn, isPending } = useMutation({
-    mutationFn: async (credentials: SignupFormData) => {
-      await signup(credentials)
+  const signupMutation = useMutation({
+    mutationFn: async (data: SignupFormData) => {
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            full_name: data.name,
+          },
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return authData;
     },
     onSuccess: () => {
-      toast.success("Account created successfully!");
-      navigate("/login");
+      setErrorMsg(null);
+      setSuccessMsg("Conta criada com sucesso! Verifique seu e-mail para confirmar.");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to create account");
-    }
+      setSuccessMsg(null);
+      setErrorMsg(error.message);
+    },
   });
 
-  const onSubmit = (data: SignupFormData) => signupFn(data);
+  const onSubmit = (data: SignupFormData) => {
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    signupMutation.mutate(data);
+  };
 
   return {
     register,
     handleSubmit,
     errors,
-    isPending,
     onSubmit,
     showPassword,
     setShowPassword,
     showConfirmPassword,
-    setShowConfirmPassword
+    setShowConfirmPassword,
+    isPending: signupMutation.isPending,
+    errorMsg,
+    successMsg
   }
 }

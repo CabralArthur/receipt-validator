@@ -1,22 +1,24 @@
 import * as yup from "yup";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabaseClient";
 
 import { resetPasswordSchema } from "@/schemas/auth";
-import { resetPassword, validateResetPassword } from "@/processes/auth";
+import { updatePassword } from "@/processes/auth";
 
 type ResetPasswordFormData = yup.InferType<typeof resetPasswordSchema>;
 
 export default function ResetPasswordContainer() {
     const navigate = useNavigate();
-    const { token } = useParams();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [successMsg, setSuccessMsg] = useState<string | null>(null);
+    const [isCheckingSession, setIsCheckingSession] = useState(true);
     
-    const [isLoading, setIsLoading] = useState(false);
     const { 
         register, 
         handleSubmit,
@@ -25,38 +27,73 @@ export default function ResetPasswordContainer() {
         resolver: yupResolver(resetPasswordSchema)
     });
 
-    const onSubmit = async (data: ResetPasswordFormData) => {
-        try {
-            setIsLoading(true);
-
-            await resetPassword({ password: data.password, confirmPassword: data.confirmPassword, token });
-
-            toast.success("Your password has been reset. Login to continue.");
-            navigate("/login");
-        } catch (error) {
-            toast.error((error as Error).message || "Reset password request failed");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const validateToken = async () => {
-        try {
-            if (!token) {
-                toast.error("Invalid or expired reset token");
-                navigate("/login");
-                return false;
+    // Verificar se o usuário está autenticado
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error || !session) {
+                    setErrorMsg("Sessão expirada. Por favor, solicite um novo link de redefinição de senha.");
+                    setTimeout(() => {
+                        navigate("/request-password-reset");
+                    }, 3000);
+                    return;
+                }
+                
+                setIsCheckingSession(false);
+            } catch (error) {
+                setErrorMsg("Erro ao verificar sessão. Tente novamente.");
+                setIsCheckingSession(false);
             }
-    
-            await validateResetPassword(token);
-    
-            return true;
-        } catch (error) {
-            toast.error((error as Error).message || "Invalid or expired reset token");
-            navigate("/login");
-            return false;
+        };
+
+        checkSession();
+    }, [navigate]);
+
+    const resetPasswordMutation = useMutation({
+        mutationFn: async (data: ResetPasswordFormData) => {
+            await updatePassword(data.password);
+        },
+        onSuccess: () => {
+            setErrorMsg(null);
+            setSuccessMsg("Senha redefinida com sucesso! Redirecionando para o login...");
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+        },
+        onError: (error: Error) => {
+            setSuccessMsg(null);
+            setErrorMsg(error.message);
+        },
+    });
+
+    const onSubmit = (data: ResetPasswordFormData) => {
+        setErrorMsg(null);
+        setSuccessMsg(null);
+        
+        // Validação de confirmação de senha
+        if (data.password !== data.confirmPassword) {
+            setErrorMsg("As senhas não conferem.");
+            return;
         }
+        
+        resetPasswordMutation.mutate(data);
     };
 
-    return { validateToken, register, handleSubmit, errors, onSubmit, isLoading, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword };
+    return { 
+        register, 
+        handleSubmit, 
+        errors, 
+        onSubmit, 
+        isLoading: resetPasswordMutation.isPending || isCheckingSession, 
+        showPassword, 
+        setShowPassword, 
+        showConfirmPassword, 
+        setShowConfirmPassword,
+        errorMsg,
+        successMsg,
+        statusMsg: successMsg,
+        isCheckingSession
+    };
 }

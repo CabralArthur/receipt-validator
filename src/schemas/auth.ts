@@ -9,7 +9,9 @@ export const signupSchema = yup.object({
     name: yup.string().min(2).required(),
     email: yup.string().email().required(),
     password: yup.string().min(8).required(),
-    confirmPassword: yup.string().min(8).required()
+    confirmPassword: yup.string()
+        .oneOf([yup.ref('password')], 'As senhas devem ser iguais')
+        .required('Confirmação de senha é obrigatória')
 });
 
 export const resetPasswordSchema = yup.object({

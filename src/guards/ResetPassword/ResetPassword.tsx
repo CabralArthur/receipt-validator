@@ -1,10 +1,10 @@
 import { Loader2 } from 'lucide-react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import useIsLogged from '@/hooks/useIsLogged';
 
-export default function PublicRouteGuard() {
-    const { user, loading } = useIsLogged();
+export default function ResetPasswordGuard() {
+    const { loading } = useIsLogged();
 
     if (loading) {
         return (
@@ -14,9 +14,7 @@ export default function PublicRouteGuard() {
         );
     }
 
-    if (user) {
-        return <Navigate to="/" replace />;
-    }
-
+    // Para reset de senha, permitimos usuários autenticados pelo Supabase
+    // mas não redirecionamos para home - eles precisam redefinir a senha
     return <Outlet />;
 }
