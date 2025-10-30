@@ -1,9 +1,11 @@
 import { 
   User, 
-  Mail
+  Mail,
+  FileText
 } from "lucide-react";
 import useSettingsContainer from "./Settings.container";
 import { ProfileTab, EmailTab } from "./";
+import UploadPolicy from "./UploadPolicy";
 
 export default function Settings() {
   const {
@@ -23,6 +25,12 @@ export default function Settings() {
       name: "Email",
       icon: Mail,
       description: "Endereços de email"
+    },
+    {
+      id: "policy" as const,
+      name: "Política de Reembolso",
+      icon: FileText,
+      description: "Envie sua política em PDF para processamento"
     }
   ];
 
@@ -48,7 +56,7 @@ export default function Settings() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => setActiveTab(tab.id as any)}
                 className={`
                   flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors
                   ${activeTab === tab.id
@@ -69,6 +77,7 @@ export default function Settings() {
       <div className="mt-6">
         {activeTab === "profile" && <ProfileTab />}
         {activeTab === "email" && <EmailTab />}
+        {(activeTab as any) === "policy" && <UploadPolicy />}
       </div>
     </div>
   );
