@@ -5,7 +5,6 @@ import {
 } from "lucide-react";
 import useSettingsContainer from "./Settings.container";
 import { ProfileTab, EmailTab } from "./";
-import UploadPolicy from "./UploadPolicy";
 
 export default function Settings() {
   const {
@@ -77,7 +76,6 @@ export default function Settings() {
       <div className="mt-6">
         {activeTab === "profile" && <ProfileTab />}
         {activeTab === "email" && <EmailTab />}
-        {(activeTab as any) === "policy" && <UploadPolicy />}
       </div>
     </div>
   );
