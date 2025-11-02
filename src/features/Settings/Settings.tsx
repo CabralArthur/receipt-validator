@@ -4,7 +4,7 @@ import {
   FileText
 } from "lucide-react";
 import useSettingsContainer from "./Settings.container";
-import { ProfileTab, EmailTab } from "./";
+import { ProfileTab, EmailTab, PolicyTab } from "./";
 
 export default function Settings() {
   const {
@@ -76,6 +76,7 @@ export default function Settings() {
       <div className="mt-6">
         {activeTab === "profile" && <ProfileTab />}
         {activeTab === "email" && <EmailTab />}
+        {activeTab === "policy" && <PolicyTab />}
       </div>
     </div>
   );

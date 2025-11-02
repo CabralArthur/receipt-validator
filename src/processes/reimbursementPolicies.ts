@@ -42,15 +42,54 @@ export async function uploadPolicyFile(file: File, userId: string): Promise<stri
   return `validai-bucket/${storageKey}`;
 }
 
+export async function deactivateAllUserPolicies(userId: string): Promise<void> {
+  // Verificar autenticação
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData.user) {
+    throw new Error("Usuário não autenticado");
+  }
+
+  // Verificar se o userId corresponde ao usuário autenticado
+  if (authData.user.id !== userId) {
+    throw new Error("Não autorizado a modificar políticas de outro usuário");
+  }
+
+  const { error } = await supabase
+    .from("reimbursement_policies")
+    .update({ is_active: false, updated_at: new Date().toISOString() })
+    .eq("user_id", userId)
+    .is("deleted_at", null)
+    .eq("is_active", true);
+
+  if (error) {
+    console.error("Erro ao desativar políticas anteriores:", error);
+    throw new Error(error.message);
+  }
+}
+
 export async function createReimbursementPolicy(
   userId: string,
   filePath: string,
   name: string,
 ): Promise<ReimbursementPolicy> {
+  // Verificar autenticação e garantir que userId corresponde ao usuário autenticado
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData.user) {
+    throw new Error("Usuário não autenticado");
+  }
+
+  // Verificar se o userId corresponde ao usuário autenticado
+  if (authData.user.id !== userId) {
+    throw new Error("Não autorizado a criar políticas para outro usuário");
+  }
+
+  // Desativar todas as políticas anteriores antes de criar nova
+  await deactivateAllUserPolicies(userId);
+
   const { data, error } = await supabase
     .from("reimbursement_policies")
     .insert({
-      user_id: userId,
+      user_id: authData.user.id,
       name,
       source_pdf_url: filePath,
       rules: null,
@@ -86,17 +125,71 @@ export async function updateReimbursementPolicy(
   return data as ReimbursementPolicy;
 }
 
-export async function softDeleteReimbursementPolicy(policyId: string): Promise<ReimbursementPolicy> {
+export async function getNextMostRecentPolicy(userId: string, excludePolicyId: string): Promise<ReimbursementPolicy | null> {
   const { data, error } = await supabase
     .from("reimbursement_policies")
-    .update({ deleted_at: new Date().toISOString(), is_active: false, updated_at: new Date().toISOString() })
+    .select("*")
+    .eq("user_id", userId)
+    .is("deleted_at", null)
+    .neq("id", excludePolicyId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error && error.code !== "PGRST116") { // 116: Results contain 0 rows
+    console.error("Erro ao buscar próxima política:", error);
+    throw new Error(error.message);
+  }
+
+  return data ?? null;
+}
+
+export async function softDeleteReimbursementPolicy(policyId: string): Promise<ReimbursementPolicy> {
+  // Verificar autenticação
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData.user) {
+    throw new Error("Usuário não autenticado");
+  }
+
+  // Primeiro, buscar a política que será removida para obter o user_id e verificar permissão
+  const { data: policyToDelete, error: fetchError } = await supabase
+    .from("reimbursement_policies")
+    .select("user_id")
     .eq("id", policyId)
+    .single();
+
+  if (fetchError || !policyToDelete) {
+    console.error("Erro ao buscar política para remoção:", fetchError);
+    throw new Error(fetchError?.message || "Política não encontrada");
+  }
+
+  // Verificar se o userId corresponde ao usuário autenticado
+  if (policyToDelete.user_id !== authData.user.id) {
+    throw new Error("Não autorizado a remover políticas de outro usuário");
+  }
+
+  // Remover a política atual (soft delete)
+  const { data, error } = await supabase
+    .from("reimbursement_policies")
+    .update({ 
+      deleted_at: new Date().toISOString(), 
+      is_active: false, 
+      updated_at: new Date().toISOString() 
+    })
+    .eq("id", policyId)
+    .eq("user_id", authData.user.id)
     .select()
     .single();
 
   if (error) {
     console.error("Erro ao remover policy:", error);
     throw new Error(error.message);
+  }
+
+  // Buscar a próxima política mais recente e reativá-la
+  const nextPolicy = await getNextMostRecentPolicy(policyToDelete.user_id, policyId);
+  if (nextPolicy) {
+    await updateReimbursementPolicy(nextPolicy.id, { is_active: true });
   }
 
   return data as ReimbursementPolicy;
@@ -133,7 +226,7 @@ export async function getPolicyPublicUrl(filePath: string): Promise<string | nul
 }
 
 export async function deletePolicyFile(filePath: string): Promise<void> {
-  // filePath salvo como "validai-bucket/<user>/<file>.pdf"; precisamos do caminho relativo ao bucket
+  // filePath salvo como "validai-bucket/<user>/<employee>/<file>.pdf"; precisamos do caminho relativo ao bucket
   let relativePath = filePath;
   if (relativePath.startsWith("validai-bucket/")) {
     relativePath = relativePath.replace(/^validai-bucket\//, "");
@@ -143,4 +236,56 @@ export async function deletePolicyFile(filePath: string): Promise<void> {
     // Loga mas não interrompe o fluxo principal
     console.error("Erro ao remover arquivo antigo da policy:", error);
   }
+}
+
+export async function callPolicyWebhook(pdfUrl: string, policyId: string): Promise<void> {
+  try {
+    const response = await fetch(
+      "https://gatewatch-n8n-sentiment-9c5a6b3c4f75.herokuapp.com/webhook/07736282-ebe8-4fd8-bdaa-4da9bfe4e9f4",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: pdfUrl,
+          policyid: policyId,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Webhook falhou: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error("Erro ao chamar webhook:", error);
+    // Não interrompemos o fluxo principal, apenas logamos o erro
+  }
+}
+
+export async function uploadAndCreatePolicy(
+  file: File,
+  userId: string
+): Promise<ReimbursementPolicy> {
+  // Usar o nome do arquivo (sem extensão) como nome da política
+  const fileName = file.name.replace(/\.[^/.]+$/, "");
+
+  // 1. Fazer upload do arquivo
+  const filePath = await uploadPolicyFile(file, userId);
+
+  // 2. Obter URL pública do arquivo
+  const publicUrl = await getPolicyPublicUrl(filePath);
+  if (!publicUrl) {
+    throw new Error("Não foi possível obter URL pública do arquivo");
+  }
+
+  // 3. Criar registro no banco (já desativa políticas anteriores)
+  const policy = await createReimbursementPolicy(userId, filePath, fileName);
+
+  // 4. Chamar webhook (não bloqueia em caso de erro)
+  await callPolicyWebhook(publicUrl, policy.id).catch((error) => {
+    console.error("Erro ao chamar webhook (continuando):", error);
+  });
+
+  return policy;
 }
