@@ -102,7 +102,7 @@ export default function Sidebar({ isOpen, onToggle, isCollapsed = false, onToggl
           {/* User Info */}
           <div className={`border-b border-slate-200 dark:border-slate-700 ${isCollapsed ? 'p-4' : 'p-6'}`}>
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <div className={`bg-blue-500 rounded-full flex items-center justify-center ${isCollapsed ? 'w-8 h-8' : 'w-10 h-10'}`}>
+              <div className={`bg-green-500 rounded-full flex items-center justify-center ${isCollapsed ? 'w-8 h-8' : 'w-10 h-10'}`}>
                 <span className={`text-white font-medium ${isCollapsed ? 'text-xs' : 'text-sm'}`}>
                   {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
                 </span>
@@ -132,7 +132,7 @@ export default function Sidebar({ isOpen, onToggle, isCollapsed = false, onToggl
                     flex items-center text-sm font-medium rounded-lg transition-colors
                     ${isCollapsed ? 'justify-center px-2 py-3' : 'px-3 py-2'}
                     ${item.current
-                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
+                      ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300'
                       : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
                     }
                   `}

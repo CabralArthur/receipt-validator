@@ -359,7 +359,7 @@ export default function EmployeeDetail() {
                         >
                           <div className="flex items-center justify-between w-full">
                             <div className="flex items-center space-x-4 flex-1">
-                              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
                                 <FileText className="h-5 w-5 text-white" />
                               </div>
                               <div className="text-left flex-1">
@@ -388,7 +388,7 @@ export default function EmployeeDetail() {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                                  className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     window.open(receipt.receipt_url, '_blank');
@@ -444,8 +444,8 @@ export default function EmployeeDetail() {
                               <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
                                 <div className="flex items-start space-x-3">
                                   <div className="flex-shrink-0">
-                                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
-                                      <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                                      <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
                                     </div>
                                   </div>
                                   <div className="flex-1">

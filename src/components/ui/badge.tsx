@@ -9,7 +9,7 @@ function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const baseClasses = "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
   
   const variantClasses = {
-    default: "border-transparent bg-blue-500 text-white hover:bg-blue-600",
+    default: "border-transparent bg-green-500 text-white hover:bg-green-600",
     secondary: "border-transparent bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700",
     destructive: "border-transparent bg-red-500 text-white hover:bg-red-600",
     outline: "text-slate-900 border-slate-200 dark:text-slate-100 dark:border-slate-700",

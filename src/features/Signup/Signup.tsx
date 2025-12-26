@@ -135,7 +135,7 @@ const Signup = () => {
                         <p className="text-sm text-green-800">{successMsg}</p>
                     </div>
                 )}
-                <Button type="submit" className="w-full" disabled={isPending}>
+                <Button type="submit" className="w-full bg-green-800 text-white hover:bg-green-900" disabled={isPending}>
                     {isPending ? "Criando conta..." : "Criar conta"}
                 </Button>
                 </form>

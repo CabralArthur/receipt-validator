@@ -242,7 +242,7 @@ export default function PolicyTab() {
                         </span>
                       )}
                       {currentPolicy.rules && currentPolicy.rules.length > 0 && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                           {currentPolicy.rules.length} regra(s) processada(s)
                         </span>
                       )}
@@ -278,7 +278,7 @@ export default function PolicyTab() {
               {currentPolicy.rules && currentPolicy.rules.length > 0 && (
                 <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
                   <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                    <Sparkles className="h-5 w-5 text-green-500 dark:text-green-400" />
                     <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                       Regras Processadas
                     </h4>
@@ -290,11 +290,11 @@ export default function PolicyTab() {
                     {currentPolicy.rules.map((rule, index) => (
                       <div
                         key={index}
-                        className="group flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-100 dark:border-blue-900/30 hover:border-blue-200 dark:hover:border-blue-800 transition-all shadow-sm hover:shadow-md"
+                        className="group flex items-center gap-3 p-4 bg-gradient-to-r from-green-50/50 to-indigo-50/50 dark:from-green-950/20 dark:to-indigo-950/20 rounded-lg border border-green-100 dark:border-green-900/30 hover:border-green-200 dark:hover:border-green-800 transition-all shadow-sm hover:shadow-md"
                       >
                         <div className="flex-shrink-0 mt-0.5">
-                          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
-                            <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
+                            <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">

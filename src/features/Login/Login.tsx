@@ -83,7 +83,7 @@ export default function LoginPage() {
                     <p className="text-sm text-red-800">{errorMsg}</p>
                   </div>
                 )}
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full bg-green-800 text-white hover:bg-green-900" disabled={isLoading}>
                   {isLoading ? "Entrando..." : "Entrar"}
                 </Button>
               </form>

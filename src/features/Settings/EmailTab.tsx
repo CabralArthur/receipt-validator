@@ -94,7 +94,7 @@ export default function EmailTab() {
                 <div className="space-y-2">
                   {/* Step 1 */}
                   <div className="flex items-start gap-2">
-                    <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                    <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
                       1
                     </div>
                     <div className="text-left">
@@ -109,7 +109,7 @@ export default function EmailTab() {
 
                   {/* Step 2 */}
                   <div className="flex items-start gap-2">
-                    <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                    <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
                       2
                     </div>
                     <div className="text-left">
@@ -124,7 +124,7 @@ export default function EmailTab() {
 
                   {/* Step 3 */}
                   <div className="flex items-start gap-2">
-                    <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                    <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
                       3
                     </div>
                     <div className="text-left">

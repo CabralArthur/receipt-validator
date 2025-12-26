@@ -55,11 +55,11 @@ export default function RequestPasswordReset() {
                   <p className="text-sm text-green-800">{statusMsg}</p>
                 </div>
               )}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-green-800 text-white hover:bg-green-900" disabled={isLoading}>
                 {isLoading ? "Enviando..." : "Enviar link"}
               </Button>
               <div className="text-center">
-                <Button variant="link" asChild>
+                <Button variant="link" asChild className="text-green-800 hover:text-green-900">
                   <Link to="/login">
                     <ArrowLeftIcon className="w-4 h-4 mr-2" />
                     Voltar ao login

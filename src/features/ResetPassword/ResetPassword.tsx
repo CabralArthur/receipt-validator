@@ -33,7 +33,7 @@ export default function ResetPassword() {
                 <div className="mx-auto w-full max-w-sm min-w-[400px]">
                     <Card className="md:min-w-[400px]">
                         <CardContent className="flex flex-col items-center justify-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-800 mb-4"></div>
                             <p className="text-sm text-muted-foreground">Verificando sessão...</p>
                         </CardContent>
                     </Card>
@@ -126,7 +126,7 @@ export default function ResetPassword() {
                   <p className="text-sm text-green-800">{statusMsg}</p>
                 </div>
               )}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-green-800 text-white hover:bg-green-900" disabled={isLoading}>
                 {isLoading ? "Salvando..." : "Atualizar senha"}
               </Button>
             </form>
