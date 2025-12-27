@@ -1,19 +1,13 @@
-import { Search, Filter, Loader2, AlertCircle } from 'lucide-react';
+import { Search, Loader2, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import IntegrationCard from '@/components/IntegrationCard';
 import useIntegrationsContainer from './Integrations.container';
 
 export default function Integrations() {
   const {
     integrations,
-    categories,
     searchQuery,
     setSearchQuery,
-    categoryFilter,
-    setCategoryFilter,
-    statusFilter,
-    setStatusFilter,
     isLoading,
     isConnecting,
     isDisconnecting,
@@ -26,13 +20,6 @@ export default function Integrations() {
     handleDisconnect,
     handleEnable,
   } = useIntegrationsContainer();
-
-  const statusOptions: Array<{ value: string; label: string }> = [
-    { value: 'all', label: 'Todos' },
-    { value: 'connected', label: 'Conectados' },
-    { value: 'not_connected', label: 'Não Conectados' },
-    { value: 'error', label: 'Erro' },
-  ];
 
   const isActionLoading = isConnecting || isDisconnecting || isEnabling;
   const hasError = error || connectError || disconnectError || enableError;
@@ -67,70 +54,16 @@ export default function Integrations() {
         </div>
       )}
 
-      {/* Search and Filters */}
-      <div className="space-y-4">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            type="text"
-            placeholder="Buscar integrações..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-slate-500 dark:text-slate-400" />
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              Filtros:
-            </span>
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-600 dark:text-slate-400">Categoria:</span>
-            <div className="flex gap-2 flex-wrap">
-              <Button
-                variant={categoryFilter === 'all' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setCategoryFilter('all')}
-              >
-                Todas
-              </Button>
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={categoryFilter === category ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setCategoryFilter(category)}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-600 dark:text-slate-400">Status:</span>
-            <div className="flex gap-2 flex-wrap">
-              {statusOptions.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={statusFilter === option.value ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setStatusFilter(option.value as any)}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <Input
+          type="text"
+          placeholder="Buscar integrações..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
       {/* Results Count */}
@@ -152,8 +85,8 @@ export default function Integrations() {
       {!isLoading && integrations.length === 0 && (
         <div className="text-center py-12">
           <p className="text-slate-600 dark:text-slate-400">
-            {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
-              ? 'Nenhuma integração encontrada com os filtros aplicados.'
+            {searchQuery
+              ? 'Nenhuma integração encontrada com esse nome.'
               : 'Nenhuma integração disponível no momento.'}
           </p>
         </div>

@@ -1,46 +1,28 @@
 import { Search, Loader2, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import IntegrationCard from '@/components/IntegrationCard';
 import useIntegrationsContainer from '@/features/Integrations/Integrations.container';
-import { cn } from '@/lib/utils';
 
 export default function IntegrationsTab() {
   const {
     integrations,
-    categories,
     searchQuery,
     setSearchQuery,
-    categoryFilter,
-    setCategoryFilter,
-    statusFilter,
-    setStatusFilter,
     isLoading,
     isConnecting,
     isDisconnecting,
     isEnabling,
-    isDisabling,
     error,
     connectError,
     disconnectError,
     enableError,
-    disableError,
     handleConnect,
     handleDisconnect,
     handleEnable,
-    handleDisable,
   } = useIntegrationsContainer();
 
-  const statusOptions: Array<{ value: string; label: string }> = [
-    { value: 'all', label: 'Todos' },
-    { value: 'connected', label: 'Conectados' },
-    { value: 'not_connected', label: 'Não Conectados' },
-    { value: 'disabled', label: 'Desabilitados' },
-    { value: 'error', label: 'Erro' },
-  ];
-
-  const isActionLoading = isConnecting || isDisconnecting || isEnabling || isDisabling;
-  const hasError = error || connectError || disconnectError || enableError || disableError;
+  const isActionLoading = isConnecting || isDisconnecting || isEnabling;
+  const hasError = error || connectError || disconnectError || enableError;
 
   return (
     <div className="space-y-6">
@@ -54,78 +36,22 @@ export default function IntegrationsTab() {
                connectError?.message || 
                disconnectError?.message || 
                enableError?.message || 
-               disableError?.message || 
                'Ocorreu um erro. Tente novamente.'}
             </p>
           </div>
         </div>
       )}
 
-      {/* Search and Filters */}
-      <div className="space-y-4">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            type="text"
-            placeholder="Buscar integrações..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 items-end">
-          {/* Category Filter */}
-          <div className="flex flex-col gap-2 min-w-[200px]">
-            <Label htmlFor="category-filter" className="text-sm text-slate-600 dark:text-slate-400">
-              Categoria
-            </Label>
-            <select
-              id="category-filter"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className={cn(
-                "flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2",
-                "disabled:cursor-not-allowed disabled:opacity-50",
-                "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-              )}
-            >
-              <option value="all">Todas</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex flex-col gap-2 min-w-[200px]">
-            <Label htmlFor="status-filter" className="text-sm text-slate-600 dark:text-slate-400">
-              Status
-            </Label>
-            <select
-              id="status-filter"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
-              className={cn(
-                "flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2",
-                "disabled:cursor-not-allowed disabled:opacity-50",
-                "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-              )}
-            >
-              {statusOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <Input
+          type="text"
+          placeholder="Buscar integrações..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
       {/* Results Count */}
@@ -147,8 +73,8 @@ export default function IntegrationsTab() {
       {!isLoading && integrations.length === 0 && (
         <div className="text-center py-12">
           <p className="text-slate-600 dark:text-slate-400">
-            {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
-              ? 'Nenhuma integração encontrada com os filtros aplicados.'
+            {searchQuery
+              ? 'Nenhuma integração encontrada com esse nome.'
               : 'Nenhuma integração disponível no momento.'}
           </p>
         </div>
@@ -163,7 +89,6 @@ export default function IntegrationsTab() {
               onConnect={handleConnect}
               onDisconnect={handleDisconnect}
               onEnable={handleEnable}
-              onDisable={handleDisable}
               isLoading={isActionLoading}
             />
           ))}
