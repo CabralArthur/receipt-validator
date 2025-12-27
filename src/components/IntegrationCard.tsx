@@ -115,7 +115,7 @@ export default function IntegrationCard({
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-12 h-12 rounded-lg bg-green-700 flex items-center justify-center text-white font-semibold text-sm">
                 {getInitials(integration.name)}
               </div>
             )}

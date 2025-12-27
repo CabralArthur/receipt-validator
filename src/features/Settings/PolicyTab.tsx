@@ -130,7 +130,7 @@ export default function PolicyTab() {
             {isUploadingPolicy && (
               <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-green-700" />
                   <p className="text-sm text-green-600 dark:text-green-400">
                     Enviando política e processando regras...
                   </p>
@@ -278,7 +278,7 @@ export default function PolicyTab() {
               {currentPolicy.rules && currentPolicy.rules.length > 0 && (
                 <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
                   <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="h-5 w-5 text-green-500 dark:text-green-400" />
+                    <Sparkles className="h-5 w-5 text-green-700 dark:text-green-400" />
                     <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                       Regras Processadas
                     </h4>

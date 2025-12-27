@@ -359,7 +359,7 @@ export default function EmployeeDetail() {
                         >
                           <div className="flex items-center justify-between w-full">
                             <div className="flex items-center space-x-4 flex-1">
-                              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                              <div className="w-10 h-10 bg-green-700 rounded-lg flex items-center justify-center">
                                 <FileText className="h-5 w-5 text-white" />
                               </div>
                               <div className="text-left flex-1">

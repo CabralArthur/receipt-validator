@@ -76,7 +76,7 @@ export default function Integrations() {
       {/* Loading State */}
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-green-500 mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" />
           <p className="text-slate-600 dark:text-slate-400">Carregando integrações...</p>
         </div>
       )}

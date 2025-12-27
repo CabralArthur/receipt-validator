@@ -101,7 +101,7 @@ export default function ProfileTab() {
             {isUpdatingProfile && (
               <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-green-700" />
                   <p className="text-sm text-green-600 dark:text-green-400">
                     Atualizando perfil...
                   </p>
@@ -202,7 +202,7 @@ export default function ProfileTab() {
               {isUpdatingPassword && (
                 <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <CheckCircle className="h-4 w-4 text-green-700" />
                     <p className="text-sm text-green-600 dark:text-green-400">
                       Atualizando senha...
                     </p>

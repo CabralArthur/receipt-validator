@@ -197,7 +197,7 @@ export default function Employees() {
           placeholder="Pesquisar funcionários por nome ou email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+          className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-colors"
         />
       </div>
 
@@ -225,7 +225,7 @@ export default function Employees() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Comprovantes Aprovados</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
+            <CheckCircle className="h-4 w-4 text-green-700" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -333,7 +333,7 @@ export default function Employees() {
                   className="flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center">
                       <span className="text-white font-medium text-sm">
                         {employee.name.charAt(0).toUpperCase()}
                       </span>

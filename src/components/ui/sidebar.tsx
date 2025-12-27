@@ -102,7 +102,7 @@ export default function Sidebar({ isOpen, onToggle, isCollapsed = false, onToggl
           {/* User Info */}
           <div className={`border-b border-slate-200 dark:border-slate-700 ${isCollapsed ? 'p-4' : 'p-6'}`}>
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <div className={`bg-green-500 rounded-full flex items-center justify-center ${isCollapsed ? 'w-8 h-8' : 'w-10 h-10'}`}>
+              <div className={`bg-green-700 rounded-full flex items-center justify-center ${isCollapsed ? 'w-8 h-8' : 'w-10 h-10'}`}>
                 <span className={`text-white font-medium ${isCollapsed ? 'text-xs' : 'text-sm'}`}>
                   {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
                 </span>
