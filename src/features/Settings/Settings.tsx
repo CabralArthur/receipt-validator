@@ -1,10 +1,9 @@
 import { 
   User, 
-  Mail,
   FileText
 } from "lucide-react";
 import useSettingsContainer from "./Settings.container";
-import { ProfileTab, EmailTab, PolicyTab } from "./";
+import { ProfileTab, PolicyTab } from "./";
 
 export default function Settings() {
   const {
@@ -18,12 +17,6 @@ export default function Settings() {
       name: "Perfil",
       icon: User,
       description: "Gerencie suas informações pessoais"
-    },
-    {
-      id: "email" as const,
-      name: "Email",
-      icon: Mail,
-      description: "Endereços de email"
     },
     {
       id: "policy" as const,
