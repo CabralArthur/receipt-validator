@@ -5,6 +5,7 @@ import App from '../App';
 import Employees from '@/features/Employees/Employees';
 import EmployeeDetail from '@/features/Employees/EmployeeDetail';
 import Settings from '@/features/Settings/Settings';
+import { Integrations } from '@/features/Integrations';
 import Login from '@features/Login';
 import Signup from '@features/Signup';
 import ResetPassword from '@features/ResetPassword';
@@ -60,6 +61,10 @@ export const createRouter = () =>
                         {
                             path: "/settings",
                             element: <Settings />,
+                        },
+                        {
+                            path: "/integrations",
+                            element: <Integrations />,
                         }
                     ],
                 }

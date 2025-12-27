@@ -24,7 +24,7 @@ interface UpdatePasswordData {
 }
 
 const useSettingsContainer = () => {
-  const [activeTab, setActiveTab] = useState<"profile" | "email" | "policy">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "integrations" | "policy">("profile");
   const queryClient = useQueryClient();
 
   const { userInfo, setUserInfo } = useUserStore();

@@ -141,7 +141,7 @@ export default function PolicyTab() {
             {/* File Upload */}
             <div className="space-y-2">
               <Label htmlFor="pdfFile">Arquivo PDF</Label>
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 <div className="flex-1">
                   <Input
                     id="pdfFile"
@@ -161,7 +161,7 @@ export default function PolicyTab() {
                     variant="outline"
                     size="sm"
                     onClick={handleRemoveFile}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 mt-[2px]"
                   >
                     <X className="h-4 w-4" />
                     Remover

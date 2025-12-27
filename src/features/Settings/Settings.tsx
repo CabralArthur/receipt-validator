@@ -1,9 +1,10 @@
 import { 
   User, 
-  FileText
+  FileText,
+  Plug
 } from "lucide-react";
 import useSettingsContainer from "./Settings.container";
-import { ProfileTab, PolicyTab } from "./";
+import { ProfileTab, PolicyTab, IntegrationsTab } from "./";
 
 export default function Settings() {
   const {
@@ -17,6 +18,12 @@ export default function Settings() {
       name: "Perfil",
       icon: User,
       description: "Gerencie suas informações pessoais"
+    },
+    {
+      id: "integrations" as const,
+      name: "Integrações",
+      icon: Plug,
+      description: "Conecte e gerencie suas integrações"
     },
     {
       id: "policy" as const,
@@ -68,7 +75,7 @@ export default function Settings() {
       {/* Tab Content */}
       <div className="mt-6">
         {activeTab === "profile" && <ProfileTab />}
-        {activeTab === "email" && <EmailTab />}
+        {activeTab === "integrations" && <IntegrationsTab />}
         {activeTab === "policy" && <PolicyTab />}
       </div>
     </div>
