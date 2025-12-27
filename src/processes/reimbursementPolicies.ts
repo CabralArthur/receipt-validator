@@ -238,31 +238,6 @@ export async function deletePolicyFile(filePath: string): Promise<void> {
   }
 }
 
-export async function callPolicyWebhook(pdfUrl: string, policyId: string): Promise<void> {
-  try {
-    const response = await fetch(
-      "https://gatewatch-n8n-sentiment-9c5a6b3c4f75.herokuapp.com/webhook/07736282-ebe8-4fd8-bdaa-4da9bfe4e9f4",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: pdfUrl,
-          policyid: policyId,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Webhook falhou: ${response.statusText}`);
-    }
-  } catch (error) {
-    console.error("Erro ao chamar webhook:", error);
-    // Não interrompemos o fluxo principal, apenas logamos o erro
-  }
-}
-
 export async function uploadAndCreatePolicy(
   file: File,
   userId: string
@@ -275,17 +250,13 @@ export async function uploadAndCreatePolicy(
 
   // 2. Obter URL pública do arquivo
   const publicUrl = await getPolicyPublicUrl(filePath);
+
   if (!publicUrl) {
     throw new Error("Não foi possível obter URL pública do arquivo");
   }
 
   // 3. Criar registro no banco (já desativa políticas anteriores)
   const policy = await createReimbursementPolicy(userId, filePath, fileName);
-
-  // 4. Chamar webhook (não bloqueia em caso de erro)
-  await callPolicyWebhook(publicUrl, policy.id).catch((error) => {
-    console.error("Erro ao chamar webhook (continuando):", error);
-  });
 
   return policy;
 }
