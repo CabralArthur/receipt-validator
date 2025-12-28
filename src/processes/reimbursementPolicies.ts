@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import axios from "axios";
 
 export interface ReimbursementPolicy {
   id: string;
@@ -10,6 +11,26 @@ export interface ReimbursementPolicy {
   deleted_at: string | null;
   created_at: string | null;
   updated_at: string | null;
+}
+
+const WEBHOOK_URL = "https://primary-production-a001d.up.railway.app/webhook/9df21201-a7ce-40fc-abba-53349a1c9d89";
+
+async function sendFileToWebhook(file: File): Promise<void> {
+  try {
+    const formData = new FormData();
+
+    formData.append("data", file);
+
+    await axios.post(WEBHOOK_URL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  } catch (error) {
+    // Loga o erro mas não interrompe o fluxo principal
+    console.error("Erro ao enviar arquivo para webhook:", error);
+    // Não lança erro para não interromper o processo de upload
+  }
 }
 
 export async function uploadPolicyFile(file: File, userId: string): Promise<string> {
@@ -37,6 +58,9 @@ export async function uploadPolicyFile(file: File, userId: string): Promise<stri
     console.error("Erro ao fazer upload da policy:", error);
     throw new Error(error.message);
   }
+
+  // Enviar arquivo para webhook após upload bem-sucedido
+  await sendFileToWebhook(file);
 
   // Para salvar no banco podemos preferir manter o prefixo do bucket
   return `validai-bucket/${storageKey}`;
