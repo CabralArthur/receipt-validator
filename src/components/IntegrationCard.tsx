@@ -4,6 +4,9 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, Plug, PlugZap, AlertCircle, XCircle } from 'lucide-react';
+import axios from 'axios';
+import { supabase } from '@/lib/supabaseClient';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IntegrationCardProps {
   integration: IntegrationWithUser;
@@ -48,6 +51,8 @@ export default function IntegrationCard({
   isLoading = false,
 }: IntegrationCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [isConnectingSlack, setIsConnectingSlack] = useState(false);
+  const queryClient = useQueryClient();
   const status = integration.status || 'not_connected';
   const statusInfo = statusConfig[status] || statusConfig.not_connected;
   const StatusIcon = statusInfo.icon;
@@ -86,7 +91,64 @@ export default function IntegrationCard({
     }
   };
 
-  const handleAction = () => {
+  const handleAction = async () => {
+    const isSlack = integration.key?.toLowerCase() === 'slack' ||  integration.name?.toLowerCase() === 'slack';
+    
+    // For Slack, fetch the OAuth URL and open it in a popup
+    if (isSlack && (status === 'not_connected' || status === null || status === 'error')) {
+      setIsConnectingSlack(true);
+      
+      try {
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+
+        if (!token) {
+          throw new Error('Token não encontrado');
+        }
+
+        // Make GET request to Slack install endpoint with bearer token
+        const response = await axios.get(
+          'https://gatewatch-n8n-sentiment-9c5a6b3c4f75.herokuapp.com/webhook/slack/install',
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+
+        // Open popup window (not full screen)
+        const width = 600;
+        const height = 700;
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 2;
+        
+        const popup = window.open(
+          response.data.url,
+          'slack-oauth',
+          `width=${width},height=${height},left=${left},top=${top},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes`
+        );
+
+        // Monitor popup closure
+        if (popup) {
+          const checkClosed = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(checkClosed);
+              setIsConnectingSlack(false);
+              // Refetch integrations when popup closes
+              queryClient.invalidateQueries({ queryKey: ['integrations'] });
+            }
+          }, 500);
+        } else {
+          setIsConnectingSlack(false);
+        }
+      } catch (error) {
+        console.error('Erro ao conectar Slack:', error);
+        setIsConnectingSlack(false);
+      }
+      return;
+    }
+    
+    // For non-Slack integrations, use the normal flow
     if (status === 'not_connected' || status === null) {
       onConnect(integration.id);
     } else if (status === 'disabled') {
@@ -179,10 +241,10 @@ export default function IntegrationCard({
             variant="default"
             size="sm"
             onClick={handleAction}
-            disabled={isLoading}
+            disabled={isLoading || isConnectingSlack}
             className="flex-1"
           >
-            {isLoading ? (
+            {(isLoading || isConnectingSlack) ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Conectando...
@@ -215,10 +277,10 @@ export default function IntegrationCard({
             variant="outline"
             size="sm"
             onClick={handleAction}
-            disabled={isLoading}
+            disabled={isLoading || isConnectingSlack}
             className="flex-1"
           >
-            {isLoading ? (
+            {(isLoading || isConnectingSlack) ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Reconectando...

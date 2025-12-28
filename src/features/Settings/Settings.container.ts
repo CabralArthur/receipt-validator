@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
-  listInboxAliases, 
   updateUserProfile,
   updateUserPassword
 } from "@/processes/inboxAliases";
@@ -28,12 +27,6 @@ const useSettingsContainer = () => {
   const queryClient = useQueryClient();
 
   const { userInfo, setUserInfo } = useUserStore();
-
-  // Listar aliases de email
-  const { data: aliases = [], isLoading: aliasesLoading, error: aliasesError } = useQuery({
-    queryKey: ['inbox-aliases'],
-    queryFn: listInboxAliases,
-  });
 
   // Listar employees
   const { data: employees = [], isLoading: employeesLoading } = useQuery({
@@ -105,14 +98,12 @@ const useSettingsContainer = () => {
 
   return {
     // Data
-    aliases,
     userInfo,
     activeTab,
     employees,
     currentPolicy,
     
     // Loading states
-    aliasesLoading,
     employeesLoading,
     policyLoading,
     isUpdatingProfile: updateProfileMutation.isPending,
@@ -121,7 +112,6 @@ const useSettingsContainer = () => {
     isDeletingPolicy: deletePolicyMutation.isPending,
     
     // Error states
-    aliasesError,
     policyError,
     updateProfileError: updateProfileMutation.error,
     updatePasswordError: updatePasswordMutation.error,

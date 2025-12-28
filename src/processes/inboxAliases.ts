@@ -7,27 +7,6 @@ export interface InboxAlias {
   created_at: string;
 }
 
-// Lista todos os aliases do usuário logado
-export async function listInboxAliases(): Promise<InboxAlias[]> {
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-  if (authError || !authData.user) {
-    throw new Error("Usuário não autenticado");
-  }
-
-  const { data, error } = await supabase
-    .from("inbox_aliases")
-    .select("*")
-    .eq("owner_user_id", authData.user.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error(error);
-    throw new Error("Erro ao listar aliases de email");
-  }
-
-  return data as InboxAlias[];
-}
-
 // Cria um novo alias de email
 export async function createInboxAlias(inbound_address: string): Promise<InboxAlias> {
   const { data: authData, error: authError } = await supabase.auth.getUser();

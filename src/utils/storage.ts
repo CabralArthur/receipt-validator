@@ -4,4 +4,4 @@ export const saveSession = ({ token }: { token: string; }) => {
 
 export const getUserId = () => ~~(localStorage.getItem('userId') || false);
 export const logout = () => localStorage.clear();
-export const getToken = () => localStorage.getItem('token');
+export const getToken = () => localStorage.getItem('sb-fkksdgyzclllczismerm-auth-token');
