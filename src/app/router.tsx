@@ -10,10 +10,11 @@ import Login from '@features/Login';
 import Signup from '@features/Signup';
 import ResetPassword from '@features/ResetPassword';
 import RequestPasswordReset from '@features/RequestPasswordReset';
-
+import IntegrationSuccess from '@features/IntegrationSuccess';
 import PublicRouteGuard from '@/guards/Public';
 import PrivateRouteGuard from '@/guards/Private';
 import ResetPasswordGuard from '@/guards/ResetPassword';
+
 
 export const createRouter = () =>
     createBrowserRouter([
@@ -65,6 +66,10 @@ export const createRouter = () =>
                         {
                             path: "/integrations",
                             element: <Integrations />,
+                        },
+                        {
+                            path: "/integration-success",
+                            element: <IntegrationSuccess />,
                         }
                     ],
                 }
