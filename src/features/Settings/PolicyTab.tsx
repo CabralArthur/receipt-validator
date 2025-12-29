@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { FileText, Upload, Loader2, CheckCircle, AlertCircle, Trash2, Download, X, Sparkles, Clock } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { FileText, Upload, Loader2, CheckCircle, AlertCircle, Trash2, Download, X, Sparkles, Clock, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,9 @@ export default function PolicyTab() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isRulesExpanded, setIsRulesExpanded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const rulesCardRef = useRef<HTMLDivElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,6 +94,18 @@ export default function PolicyTab() {
       setIsDeleteModalOpen(false);
     }
   };
+
+  // Scroll para o card quando o accordion for expandido
+  useEffect(() => {
+    if (isRulesExpanded && rulesCardRef.current) {
+      setTimeout(() => {
+        rulesCardRef.current?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }, 100); // Pequeno delay para garantir que o conteúdo foi renderizado
+    }
+  }, [isRulesExpanded]);
 
   if (policyLoading) {
     return (
@@ -284,37 +298,51 @@ export default function PolicyTab() {
               {/* Rules Section */}
               <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
                 {currentPolicy.rules && currentPolicy.rules.trim().length > 0 ? (
-                  <>
-                    <div className="flex items-center gap-2 mb-4">
-                      <Sparkles className="h-5 w-5 text-green-700 dark:text-green-400" />
-                      <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-                        Regras Processadas
-                      </h4>
-                    </div>
-                    <div className="p-4 bg-gradient-to-r from-green-50/50 to-indigo-50/50 dark:from-green-950/20 dark:to-indigo-950/20 rounded-lg border border-green-100 dark:border-green-900/30 max-h-[300px] overflow-y-auto">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 mt-0.5">
-                          <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
-                            <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <Card ref={rulesCardRef}>
+                    <CardHeader 
+                      className="cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
+                      onClick={() => setIsRulesExpanded(!isRulesExpanded)}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="h-5 w-5 text-green-700 dark:text-green-400" />
+                          <CardTitle className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                            Regras Processadas
+                          </CardTitle>
+                        </div>
+                        <ChevronDown 
+                          className={`h-5 w-5 text-slate-400 transition-transform duration-200 ${
+                            isRulesExpanded ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </div>
+                    </CardHeader>
+                    {isRulesExpanded && (
+                      <CardContent>
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 mt-0.5">
+                            <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                              <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0 prose prose-sm dark:prose-invert max-w-none 
+                            prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:font-semibold
+                            prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-relaxed
+                            prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-semibold
+                            prose-code:text-green-600 dark:prose-code:text-green-400 prose-code:bg-green-50 dark:prose-code:bg-green-950/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono
+                            prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-pre:text-slate-800 dark:prose-pre:text-slate-200 prose-pre:border prose-pre:border-slate-200 dark:prose-pre:border-slate-700
+                            prose-ul:text-slate-700 dark:prose-ul:text-slate-300 prose-ol:text-slate-700 dark:prose-ol:text-slate-300
+                            prose-li:text-slate-700 dark:prose-li:text-slate-300
+                            prose-a:text-green-600 dark:prose-a:text-green-400 prose-a:no-underline hover:prose-a:underline
+                            prose-blockquote:border-l-green-500 dark:prose-blockquote:border-l-green-400 prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400 max-h-[400px] overflow-y-auto">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {currentPolicy.rules}
+                            </ReactMarkdown>
                           </div>
                         </div>
-                        <div className="flex-1 min-w-0 prose prose-sm dark:prose-invert max-w-none 
-                          prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:font-semibold
-                          prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-relaxed
-                          prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-semibold
-                          prose-code:text-green-600 dark:prose-code:text-green-400 prose-code:bg-green-50 dark:prose-code:bg-green-950/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono
-                          prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-pre:text-slate-800 dark:prose-pre:text-slate-200 prose-pre:border prose-pre:border-slate-200 dark:prose-pre:border-slate-700
-                          prose-ul:text-slate-700 dark:prose-ul:text-slate-300 prose-ol:text-slate-700 dark:prose-ol:text-slate-300
-                          prose-li:text-slate-700 dark:prose-li:text-slate-300
-                          prose-a:text-green-600 dark:prose-a:text-green-400 prose-a:no-underline hover:prose-a:underline
-                          prose-blockquote:border-l-green-500 dark:prose-blockquote:border-l-green-400 prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {currentPolicy.rules}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    </div>
-                  </>
+                      </CardContent>
+                    )}
+                  </Card>
                 ) : (
                   <>
                     <div className="flex items-center gap-2 mb-4">

@@ -11,7 +11,7 @@ interface ConfirmModalProps {
   description: string;
   confirmText?: string;
   cancelText?: string;
-  variant?: "default" | "destructive" | "success";
+  variant?: "default" | "destructive" | "success" | "warning";
   icon?: "warning" | "success" | "error";
 }
 
@@ -46,6 +46,8 @@ export default function ConfirmModal({
         return "bg-red-600 hover:bg-red-700";
       case "success":
         return "bg-green-600 hover:bg-green-700";
+      case "warning":
+        return "bg-amber-600 hover:bg-amber-700";
       default:
         return "bg-primary hover:bg-primary/90";
     }

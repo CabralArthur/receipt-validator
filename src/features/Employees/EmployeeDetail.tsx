@@ -46,7 +46,8 @@ export default function EmployeeDetail() {
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     receiptId: string;
-    status: 'APPROVED' | 'REJECTED';
+    status: 'APPROVED' | 'REJECTED' | 'PENDING';
+    currentStatus: 'APPROVED' | 'REJECTED' | 'PENDING';
   } | null>(null);
   // Removido sistema de tabs - apenas dashboard
 
@@ -134,6 +135,19 @@ export default function EmployeeDetail() {
     }
   };
 
+  const getAmountColor = (status: string) => {
+    switch (status) {
+      case 'APPROVED':
+        return 'text-green-600 dark:text-green-400';
+      case 'REJECTED':
+        return 'text-red-600 dark:text-red-400';
+      case 'PENDING':
+        return 'text-yellow-600 dark:text-yellow-400';
+      default:
+        return 'text-slate-600 dark:text-slate-400';
+    }
+  };
+
   const toggleExpanded = (itemId: string) => {
     setExpandedItems(prev => {
       const newSet = new Set(prev);
@@ -146,11 +160,12 @@ export default function EmployeeDetail() {
     });
   };
 
-  const handleOpenConfirmModal = (receiptId: string, status: 'APPROVED' | 'REJECTED') => {
+  const handleOpenConfirmModal = (receiptId: string, newStatus: 'APPROVED' | 'REJECTED' | 'PENDING', currentStatus: 'APPROVED' | 'REJECTED' | 'PENDING') => {
     setConfirmModal({
       isOpen: true,
       receiptId,
-      status,
+      status: newStatus,
+      currentStatus,
     });
   };
 
@@ -418,7 +433,7 @@ export default function EmployeeDetail() {
                                 <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
                                   <span>{getFileTypeFromUrl(receipt.receipt_url)}</span>
                                   <span className="mx-2">•</span>
-                                  <span className="font-semibold text-green-600 dark:text-green-400">
+                                  <span className={`font-semibold ${getAmountColor(receipt.status)}`}>
                                     {formatCurrency(receipt.amount)}
                                   </span>
                                   <span className="mx-2">•</span>
@@ -434,44 +449,63 @@ export default function EmployeeDetail() {
                               
                               {/* Botões de ação separados */}
                               <div className="flex items-center space-x-1">
-                                {/* Botões de aprovar/rejeitar (apenas para pendentes) */}
-                                {receipt.status === 'PENDING' && (
-                                  <>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleOpenConfirmModal(receipt.id, 'APPROVED');
-                                      }}
-                                      disabled={updatingReceiptId === receipt.id}
-                                      title="Aprovar comprovante"
-                                    >
-                                      {updatingReceiptId === receipt.id ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CheckCircle className="h-4 w-4" />
-                                      )}
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleOpenConfirmModal(receipt.id, 'REJECTED');
-                                      }}
-                                      disabled={updatingReceiptId === receipt.id}
-                                      title="Rejeitar comprovante"
-                                    >
-                                      {updatingReceiptId === receipt.id ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <XCircle className="h-4 w-4" />
-                                      )}
-                                    </Button>
-                                  </>
+                                {/* Botões para trocar status - mostrar apenas os diferentes do status atual */}
+                                {receipt.status !== 'APPROVED' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleOpenConfirmModal(receipt.id, 'APPROVED', receipt.status);
+                                    }}
+                                    disabled={updatingReceiptId === receipt.id}
+                                    title="Marcar como Aprovado"
+                                  >
+                                    {updatingReceiptId === receipt.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <CheckCircle className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                )}
+                                {receipt.status !== 'REJECTED' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleOpenConfirmModal(receipt.id, 'REJECTED', receipt.status);
+                                    }}
+                                    disabled={updatingReceiptId === receipt.id}
+                                    title="Marcar como Rejeitado"
+                                  >
+                                    {updatingReceiptId === receipt.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <XCircle className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                )}
+                                {receipt.status !== 'PENDING' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleOpenConfirmModal(receipt.id, 'PENDING', receipt.status);
+                                    }}
+                                    disabled={updatingReceiptId === receipt.id}
+                                    title="Marcar como Pendente"
+                                  >
+                                    {updatingReceiptId === receipt.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <AlertCircle className="h-4 w-4" />
+                                    )}
+                                  </Button>
                                 )}
                                 
                                 <Button
@@ -569,18 +603,38 @@ export default function EmployeeDetail() {
           title={
             confirmModal.status === 'APPROVED'
               ? 'Aprovar Comprovante'
-              : 'Rejeitar Comprovante'
+              : confirmModal.status === 'REJECTED'
+              ? 'Rejeitar Comprovante'
+              : 'Marcar como Pendente'
           }
           description={
             confirmModal.status === 'APPROVED'
-              ? 'Tem certeza que deseja aprovar este comprovante? Esta ação não pode ser desfeita.'
-              : 'Tem certeza que deseja rejeitar este comprovante? Esta ação não pode ser desfeita.'
+              ? `Tem certeza que deseja alterar o status deste comprovante de "${getStatusText(confirmModal.currentStatus)}" para "Aprovado"?`
+              : confirmModal.status === 'REJECTED'
+              ? `Tem certeza que deseja alterar o status deste comprovante de "${getStatusText(confirmModal.currentStatus)}" para "Rejeitado"?`
+              : `Tem certeza que deseja alterar o status deste comprovante de "${getStatusText(confirmModal.currentStatus)}" para "Pendente"?`
           }
           confirmText={
-            confirmModal.status === 'APPROVED' ? 'Aprovar' : 'Rejeitar'
+            confirmModal.status === 'APPROVED' 
+              ? 'Aprovar' 
+              : confirmModal.status === 'REJECTED'
+              ? 'Rejeitar'
+              : 'Marcar como Pendente'
           }
-          variant={confirmModal.status === 'APPROVED' ? 'success' : 'destructive'}
-          icon={confirmModal.status === 'APPROVED' ? 'success' : 'error'}
+          variant={
+            confirmModal.status === 'APPROVED' 
+              ? 'success' 
+              : confirmModal.status === 'REJECTED'
+              ? 'destructive'
+              : 'warning'
+          }
+          icon={
+            confirmModal.status === 'APPROVED' 
+              ? 'success' 
+              : confirmModal.status === 'REJECTED'
+              ? 'error'
+              : 'warning'
+          }
         />
       )}
     </div>

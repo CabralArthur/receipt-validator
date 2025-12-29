@@ -90,7 +90,7 @@ export function getFileTypeFromUrl(url: string): string {
 // Função para atualizar o status de um comprovante
 export async function updateReceiptStatus(
   receiptId: string,
-  status: 'APPROVED' | 'REJECTED',
+  status: 'APPROVED' | 'REJECTED' | 'PENDING',
   employeeId: string
 ): Promise<EmployeeReceipt> {
   // Verificar autenticação
