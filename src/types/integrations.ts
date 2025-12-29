@@ -17,3 +17,5 @@ export interface IntegrationWithUser {
   settings: Record<string, any> | null;
 }
 
+
+

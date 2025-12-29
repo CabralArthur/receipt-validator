@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { FileText, Upload, Loader2, CheckCircle, AlertCircle, Trash2, Download, X, Sparkles } from "lucide-react";
+import { FileText, Upload, Loader2, CheckCircle, AlertCircle, Trash2, Download, X, Sparkles, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import useSettingsContainer from "./Settings.container";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { getPolicyPublicUrl } from "@/processes/reimbursementPolicies";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function PolicyTab() {
   const {
@@ -241,9 +243,14 @@ export default function PolicyTab() {
                           Inativa
                         </span>
                       )}
-                      {currentPolicy.rules && currentPolicy.rules.length > 0 && (
+                      {currentPolicy.rules && currentPolicy.rules.trim().length > 0 ? (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                          {currentPolicy.rules.length} regra(s) processada(s)
+                          Regras processadas
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Regras pendentes
                         </span>
                       )}
                     </div>
@@ -274,39 +281,66 @@ export default function PolicyTab() {
                 </div>
               </div>
 
-              {/* Rules List */}
-              {currentPolicy.rules && currentPolicy.rules.length > 0 && (
-                <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="h-5 w-5 text-green-700 dark:text-green-400" />
-                    <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-                      Regras Processadas
-                    </h4>
-                    <span className="ml-auto text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
-                      {currentPolicy.rules.length} {currentPolicy.rules.length === 1 ? 'regra' : 'regras'}
-                    </span>
-                  </div>
-                  <div className="max-h-96 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
-                    {currentPolicy.rules.map((rule, index) => (
-                      <div
-                        key={index}
-                        className="group flex items-center gap-3 p-4 bg-gradient-to-r from-green-50/50 to-indigo-50/50 dark:from-green-950/20 dark:to-indigo-950/20 rounded-lg border border-green-100 dark:border-green-900/30 hover:border-green-200 dark:hover:border-green-800 transition-all shadow-sm hover:shadow-md"
-                      >
+              {/* Rules Section */}
+              <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+                {currentPolicy.rules && currentPolicy.rules.trim().length > 0 ? (
+                  <>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Sparkles className="h-5 w-5 text-green-700 dark:text-green-400" />
+                      <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                        Regras Processadas
+                      </h4>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-green-50/50 to-indigo-50/50 dark:from-green-950/20 dark:to-indigo-950/20 rounded-lg border border-green-100 dark:border-green-900/30 max-h-[300px] overflow-y-auto">
+                      <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 mt-0.5">
-                          <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
+                          <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
                             <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0 prose prose-sm dark:prose-invert max-w-none 
+                          prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:font-semibold
+                          prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-relaxed
+                          prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-semibold
+                          prose-code:text-green-600 dark:prose-code:text-green-400 prose-code:bg-green-50 dark:prose-code:bg-green-950/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono
+                          prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-pre:text-slate-800 dark:prose-pre:text-slate-200 prose-pre:border prose-pre:border-slate-200 dark:prose-pre:border-slate-700
+                          prose-ul:text-slate-700 dark:prose-ul:text-slate-300 prose-ol:text-slate-700 dark:prose-ol:text-slate-300
+                          prose-li:text-slate-700 dark:prose-li:text-slate-300
+                          prose-a:text-green-600 dark:prose-a:text-green-400 prose-a:no-underline hover:prose-a:underline
+                          prose-blockquote:border-l-green-500 dark:prose-blockquote:border-l-green-400 prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {currentPolicy.rules}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                      <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                        Regras Pendentes
+                      </h4>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-100 dark:border-amber-900/30">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                            <Loader2 className="h-4 w-4 text-amber-600 dark:text-amber-400 animate-spin" />
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                            {rule}
+                            As regras estão sendo processadas pela IA. Isso pode levar alguns minutos. 
+                            As regras serão exibidas aqui assim que estiverem prontas.
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>

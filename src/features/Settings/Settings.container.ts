@@ -39,6 +39,51 @@ const useSettingsContainer = () => {
     queryKey: ['reimbursement-policy', userInfo?.id],
     queryFn: () => userInfo ? getLatestUserPolicy(userInfo.id) : null,
     enabled: !!userInfo,
+    // Polling: verificar a cada 5 segundos se não houver regras
+    refetchInterval: (query) => {
+      const policy = query.state.data;
+      
+      // Se não houver política, não faz polling
+      if (!policy) {
+        return false;
+      }
+      
+      // Se já tiver regras, para o polling
+      if (policy.rules && policy.rules.trim().length > 0) {
+        return false;
+      }
+      
+      // Se não houver regras, verifica se a política foi criada recentemente (últimas 2 horas)
+      if (policy.created_at) {
+        const createdAt = new Date(policy.created_at);
+        const now = new Date();
+        const diffInMinutes = (now.getTime() - createdAt.getTime()) / (1000 * 60);
+        
+        // Se passou mais de 2 horas desde a criação, para o polling
+        if (diffInMinutes > 120) {
+          return false;
+        }
+      }
+      
+      // Faz polling a cada 5 segundos se não houver regras e a política for recente
+      return 5000;
+    },
+    // Refetch quando a janela ganha foco (se não houver regras)
+    refetchOnWindowFocus: (query) => {
+      const policy = query.state.data;
+      if (!policy) return false;
+      if (policy.rules && policy.rules.trim().length > 0) return false;
+      
+      // Só refetch se a política for recente (últimas 2 horas)
+      if (policy.created_at) {
+        const createdAt = new Date(policy.created_at);
+        const now = new Date();
+        const diffInMinutes = (now.getTime() - createdAt.getTime()) / (1000 * 60);
+        return diffInMinutes <= 120;
+      }
+      
+      return true;
+    },
   });
 
   // Atualizar perfil

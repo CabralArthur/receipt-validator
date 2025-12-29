@@ -5,7 +5,7 @@ export interface ReimbursementPolicy {
   id: string;
   user_id: string;
   name: string;
-  rules: string[] | null;
+  rules: string | null;
   source_pdf_url: string | null;
   is_active: boolean;
   deleted_at: string | null;
@@ -13,13 +13,14 @@ export interface ReimbursementPolicy {
   updated_at: string | null;
 }
 
-const WEBHOOK_URL = "https://primary-production-a001d.up.railway.app/webhook/9df21201-a7ce-40fc-abba-53349a1c9d89";
+const WEBHOOK_URL = "https://gatewatch-n8n-sentiment-9c5a6b3c4f75.herokuapp.com/webhook/1947cfd0-6ca9-4b26-aa0f-1ccf48178348";
 
-async function sendFileToWebhook(file: File): Promise<void> {
+async function sendFileToWebhook(file: File, userId: string): Promise<void> {
   try {
     const formData = new FormData();
 
     formData.append("data", file);
+    formData.append("user_id", userId);
 
     await axios.post(WEBHOOK_URL, formData, {
       headers: {
@@ -60,7 +61,7 @@ export async function uploadPolicyFile(file: File, userId: string): Promise<stri
   }
 
   // Enviar arquivo para webhook após upload bem-sucedido
-  await sendFileToWebhook(file);
+  await sendFileToWebhook(file, userId);
 
   // Para salvar no banco podemos preferir manter o prefixo do bucket
   return `validai-bucket/${storageKey}`;
