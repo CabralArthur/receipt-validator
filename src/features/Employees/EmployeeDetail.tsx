@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ConfirmModal from "@/components/ui/confirm-modal";
 // Accordion components - implementação customizada
 import { 
   ArrowLeft, 
@@ -13,7 +14,10 @@ import {
   AlertCircle,
   DollarSign,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  CheckCircle,
+  XCircle,
+  Loader2
 } from "lucide-react";
 import { supabase, Employee } from "@/lib/supabaseClient";
 import { 
@@ -22,6 +26,7 @@ import {
   formatCurrency, 
   getFileNameFromUrl, 
   getFileTypeFromUrl,
+  updateReceiptStatus,
   EmployeeStats,
   EmployeeReceipt
 } from "@/processes/employeeReceipts";
@@ -37,6 +42,12 @@ export default function EmployeeDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [updatingReceiptId, setUpdatingReceiptId] = useState<string | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    receiptId: string;
+    status: 'APPROVED' | 'REJECTED';
+  } | null>(null);
   // Removido sistema de tabs - apenas dashboard
 
   useEffect(() => {
@@ -133,6 +144,44 @@ export default function EmployeeDetail() {
       }
       return newSet;
     });
+  };
+
+  const handleOpenConfirmModal = (receiptId: string, status: 'APPROVED' | 'REJECTED') => {
+    setConfirmModal({
+      isOpen: true,
+      receiptId,
+      status,
+    });
+  };
+
+  const handleCloseConfirmModal = () => {
+    setConfirmModal(null);
+  };
+
+  const handleConfirmStatus = async () => {
+    if (!id || !confirmModal) return;
+    
+    const { receiptId, status } = confirmModal;
+    
+    try {
+      setUpdatingReceiptId(receiptId);
+      const updatedReceipt = await updateReceiptStatus(receiptId, status, id);
+      
+      // Atualizar a lista de receipts
+      setReceipts(prev => prev.map(r => r.id === receiptId ? updatedReceipt : r));
+      
+      // Recarregar estatísticas
+      const updatedStats = await fetchEmployeeStats(id);
+      setStats(updatedStats);
+      
+      // Fechar modal
+      handleCloseConfirmModal();
+    } catch (err) {
+      console.error('Erro ao atualizar status:', err);
+      alert(err instanceof Error ? err.message : 'Erro ao atualizar status do comprovante');
+    } finally {
+      setUpdatingReceiptId(null);
+    }
   };
 
   // Componente de Loading Skeleton Melhorado
@@ -385,6 +434,46 @@ export default function EmployeeDetail() {
                               
                               {/* Botões de ação separados */}
                               <div className="flex items-center space-x-1">
+                                {/* Botões de aprovar/rejeitar (apenas para pendentes) */}
+                                {receipt.status === 'PENDING' && (
+                                  <>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleOpenConfirmModal(receipt.id, 'APPROVED');
+                                      }}
+                                      disabled={updatingReceiptId === receipt.id}
+                                      title="Aprovar comprovante"
+                                    >
+                                      {updatingReceiptId === receipt.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <CheckCircle className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleOpenConfirmModal(receipt.id, 'REJECTED');
+                                      }}
+                                      disabled={updatingReceiptId === receipt.id}
+                                      title="Rejeitar comprovante"
+                                    >
+                                      {updatingReceiptId === receipt.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <XCircle className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                  </>
+                                )}
+                                
                                 <Button
                                   variant="ghost"
                                   size="sm"
@@ -469,6 +558,31 @@ export default function EmployeeDetail() {
             </CardContent>
           </Card>
         </div>
+
+      {/* Modal de Confirmação */}
+      {confirmModal && (
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          onClose={handleCloseConfirmModal}
+          onConfirm={handleConfirmStatus}
+          isLoading={updatingReceiptId === confirmModal.receiptId}
+          title={
+            confirmModal.status === 'APPROVED'
+              ? 'Aprovar Comprovante'
+              : 'Rejeitar Comprovante'
+          }
+          description={
+            confirmModal.status === 'APPROVED'
+              ? 'Tem certeza que deseja aprovar este comprovante? Esta ação não pode ser desfeita.'
+              : 'Tem certeza que deseja rejeitar este comprovante? Esta ação não pode ser desfeita.'
+          }
+          confirmText={
+            confirmModal.status === 'APPROVED' ? 'Aprovar' : 'Rejeitar'
+          }
+          variant={confirmModal.status === 'APPROVED' ? 'success' : 'destructive'}
+          icon={confirmModal.status === 'APPROVED' ? 'success' : 'error'}
+        />
+      )}
     </div>
   );
 }

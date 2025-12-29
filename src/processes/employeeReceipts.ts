@@ -86,3 +86,67 @@ export function getFileTypeFromUrl(url: string): string {
     return 'PDF';
   }
 }
+
+// Função para atualizar o status de um comprovante
+export async function updateReceiptStatus(
+  receiptId: string,
+  status: 'APPROVED' | 'REJECTED',
+  employeeId: string
+): Promise<EmployeeReceipt> {
+  // Verificar autenticação
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData.user) {
+    throw new Error("Usuário não autenticado");
+  }
+
+  // Verificar se o funcionário pertence ao usuário autenticado
+  const { data: employeeData, error: employeeError } = await supabase
+    .from("employees")
+    .select("id, user_id")
+    .eq("id", employeeId)
+    .eq("user_id", authData.user.id)
+    .is("deleted_at", null)
+    .single();
+
+  if (employeeError || !employeeData) {
+    throw new Error("Funcionário não encontrado ou não autorizado");
+  }
+
+  // Verificar se o comprovante pertence ao funcionário
+  const { data: receiptData, error: receiptError } = await supabase
+    .from("receipt_employees")
+    .select("id, employee_id")
+    .eq("id", receiptId)
+    .eq("employee_id", employeeId)
+    .single();
+
+  if (receiptError || !receiptData) {
+    throw new Error("Comprovante não encontrado ou não pertence a este funcionário");
+  }
+
+  // Atualizar o status
+  const { data, error } = await supabase
+    .from("receipt_employees")
+    .update({ 
+      status,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", receiptId)
+    .eq("employee_id", employeeId)
+    .select(`
+      id,
+      amount,
+      status,
+      receipt_url,
+      created_at,
+      justification
+    `)
+    .single();
+
+  if (error) {
+    console.error("Erro ao atualizar status do comprovante:", error);
+    throw new Error(error.message);
+  }
+
+  return data as EmployeeReceipt;
+}
