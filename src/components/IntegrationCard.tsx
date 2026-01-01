@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, Plug, PlugZap, AlertCircle, XCircle } from 'lucide-react';
+import { SiSlack } from 'react-icons/si';
 import axios from 'axios';
 import { supabase } from '@/lib/supabaseClient';
 import { useQueryClient } from '@tanstack/react-query';
@@ -66,6 +67,10 @@ export default function IntegrationCard({
       .slice(0, 2);
   };
 
+  const isSlackIntegration = () => {
+    return integration.key?.toLowerCase() === 'slack' || integration.name?.toLowerCase() === 'slack';
+  };
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return null;
     try {
@@ -108,7 +113,7 @@ export default function IntegrationCard({
 
         // Make GET request to Slack install endpoint with bearer token
         const response = await axios.get(
-          'https://gatewatch-n8n-sentiment-9c5a6b3c4f75.herokuapp.com/webhook/slack/install',
+          'https://primary-production-6a2e.up.railway.app/webhook-test/slack/install',
           {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -169,7 +174,11 @@ export default function IntegrationCard({
         {/* Header with icon and badges */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            {integration.icon_url && !imageError ? (
+            {isSlackIntegration() ? (
+              <div className="w-12 h-12 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700">
+                <SiSlack className="w-8 h-8 text-green-600 dark:text-green-400" />
+              </div>
+            ) : integration.icon_url && !imageError ? (
               <img
                 src={integration.icon_url}
                 alt={integration.name}
