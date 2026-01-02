@@ -113,7 +113,7 @@ export default function IntegrationCard({
 
         // Make GET request to Slack install endpoint with bearer token
         const response = await axios.get(
-          'https://primary-production-6a2e.up.railway.app/webhook-test/slack/install',
+          'https://primary-production-6a2e.up.railway.app/webhook/slack/install',
           {
             headers: {
               'Authorization': `Bearer ${token}`,
