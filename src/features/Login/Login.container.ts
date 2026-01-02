@@ -27,7 +27,7 @@ export default function LoginContainer() {
       });
 
       if (error) {
-        throw new Error(error.message);
+        throw error;
       }
 
       return authData;
@@ -38,8 +38,14 @@ export default function LoginContainer() {
       // Redirecionar para a página principal após login bem-sucedido
       navigate("/");
     },
-    onError: (error: Error) => {
-      setErrorMsg(error.message);
+    onError: (error: any) => {
+        const { code, message } = error;
+
+        if (code === 'invalid_credentials') {
+            setErrorMsg("E-mail ou senha inválidos");
+        } else {
+            setErrorMsg(message);
+        }
     },
   });
 

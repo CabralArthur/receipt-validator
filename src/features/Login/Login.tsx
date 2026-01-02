@@ -93,7 +93,7 @@ export default function LoginPage() {
                   </div>
                   {errors.password &&
                     <p className="text-sm text-red-500">
-                      Senha é obrigatória
+                      {errors.password.message}
                     </p>}
                 </div>
                 {errorMsg && (

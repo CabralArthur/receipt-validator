@@ -15,6 +15,7 @@ function App() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   
   // Hide sidebar on integration success page
   const isIntegrationSuccessPage = location.pathname === '/integration-success';
