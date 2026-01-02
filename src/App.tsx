@@ -11,7 +11,7 @@ import { Menu } from "lucide-react";
 
 function App() {
   const { setUserInfo } = useUserStore();
-  const { user } = useIsLogged();
+  const { user, loading: authLoading } = useIsLogged();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -28,7 +28,7 @@ function App() {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
-  const { isLoading } = useQuery({
+  const { isLoading: userInfoLoading } = useQuery({
     queryKey: ['user', user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -49,6 +49,9 @@ function App() {
     },
     enabled: !!user, // Só executa se o usuário estiver logado
   });
+
+  // Mostrar loading se estiver verificando autenticação OU buscando informações do usuário
+  const isLoading = authLoading || userInfoLoading;
 
   if (isLoading) {
     return (

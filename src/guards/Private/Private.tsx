@@ -1,5 +1,4 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 
 import useIsLogged from "@/hooks/useIsLogged";
 
@@ -7,12 +6,9 @@ export default function PrivateRouteGuard() {
   const { user, loading } = useIsLogged();
   const { pathname } = useLocation();
 
+  // Se estiver carregando, renderiza o Outlet (App) que tem seu próprio loading customizado
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="w-4 h-4 animate-spin" />
-      </div>
-    );
+    return <Outlet />;
   }
 
   if (!user) {
