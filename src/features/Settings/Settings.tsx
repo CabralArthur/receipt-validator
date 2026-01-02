@@ -34,14 +34,14 @@ export default function Settings() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             Configurações
           </h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
             Gerencie suas configurações e preferências
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function Settings() {
 
       {/* Tabs */}
       <div className="border-b border-slate-200 dark:border-slate-700">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-6">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -57,14 +57,14 @@ export default function Settings() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`
-                  flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors
+                  flex items-center gap-1.5 py-1.5 px-1 border-b-2 font-medium text-xs transition-colors
                   ${activeTab === tab.id
                     ? 'border-green-700 text-green-600 dark:text-green-400'
                     : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
                   }
                 `}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5" />
                 {tab.name}
               </button>
             );
@@ -73,7 +73,7 @@ export default function Settings() {
       </div>
 
       {/* Tab Content */}
-      <div className="mt-6">
+      <div className="mt-4">
         {activeTab === "profile" && <ProfileTab />}
         {activeTab === "integrations" && <IntegrationsTab />}
         {activeTab === "policy" && <PolicyTab />}

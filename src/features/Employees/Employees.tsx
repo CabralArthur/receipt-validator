@@ -123,22 +123,23 @@ export default function Employees() {
       }} />
       
       {/* Header */}
-      <div className="flex items-center justify-between mt-0">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+      <div className="flex items-center justify-between mt-0 gap-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">
             Funcionários
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5 truncate">
             Gerencie os funcionários que enviaram documentos para validação
           </p>
         </div>
         <Button 
           size="sm"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 flex-shrink-0"
           onClick={() => setIsCreateModalOpen(true)}
         >
           <Plus className="h-4 w-4" />
-          Adicionar Funcionário
+          <span className="hidden sm:inline">Adicionar Funcionário</span>
+          <span className="sm:hidden">Adicionar</span>
         </Button>
       </div>
 
@@ -474,24 +475,24 @@ export default function Employees() {
                   key={employee.id}
                   className="flex items-center justify-between p-2.5 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
                     <div className="w-8 h-8 bg-green-700 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-white font-medium text-xs">
                         {employee.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <h3 className="font-medium text-sm text-slate-900 dark:text-slate-100 truncate">
                         {employee.name}
                       </h3>
-                      <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 truncate">
+                      <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 min-w-0">
                         <Mail className="h-3 w-3 mr-1 flex-shrink-0" />
                         <span className="truncate">{employee.email}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-1.5 flex-shrink-0">
+                  <div className="flex items-center space-x-1.5 flex-shrink-0 ml-2">
                     <span className="inline-flex items-center rounded-full border border-transparent bg-slate-100 text-slate-900 px-2 py-0.5 text-[10px] font-semibold dark:bg-slate-800 dark:text-slate-100">
                       Ativo
                     </span>

@@ -109,33 +109,33 @@ export default function PolicyTab() {
 
   if (policyLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center h-48">
+        <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Upload Policy Section */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Enviar Política de Reembolso
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <FileText className="h-4 w-4 flex-shrink-0" />
+            <span className="truncate">Enviar Política de Reembolso</span>
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs mt-0.5 truncate">
             Envie sua política de reembolso em PDF para processamento automatizado. O nome do arquivo será usado como nome da política.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="pt-0">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {/* Error Message */}
             {uploadPolicyError && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className="p-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-red-500" />
-                  <p className="text-sm text-red-600 dark:text-red-400">
+                  <AlertCircle className="h-3.5 w-3.5 text-red-500" />
+                  <p className="text-xs text-red-600 dark:text-red-400">
                     {uploadPolicyError.message || "Erro ao fazer upload da política"}
                   </p>
                 </div>
@@ -144,10 +144,10 @@ export default function PolicyTab() {
 
             {/* Success Message */}
             {isUploadingPolicy && (
-              <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <div className="p-2.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-700" />
-                  <p className="text-sm text-green-600 dark:text-green-400">
+                  <CheckCircle className="h-3.5 w-3.5 text-green-700" />
+                  <p className="text-xs text-green-600 dark:text-green-400">
                     Enviando política e processando regras...
                   </p>
                 </div>
@@ -155,19 +155,19 @@ export default function PolicyTab() {
             )}
 
             {/* File Upload */}
-            <div className="space-y-2">
-              <Label htmlFor="pdfFile">Arquivo PDF</Label>
-              <div className="flex items-start gap-4">
-                <div className="flex-1">
+            <div className="space-y-1.5">
+              <Label htmlFor="pdfFile" className="text-xs">Arquivo PDF</Label>
+              <div className="flex items-start gap-3">
+                <div className="flex-1 min-w-0">
                   <Input
                     id="pdfFile"
                     ref={fileInputRef}
                     type="file"
                     accept="application/pdf"
                     onChange={handleFileChange}
-                    className="cursor-pointer"
+                    className="cursor-pointer h-9 text-sm"
                   />
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">
                     Somente arquivos PDF são aceitos
                   </p>
                 </div>
@@ -177,18 +177,18 @@ export default function PolicyTab() {
                     variant="outline"
                     size="sm"
                     onClick={handleRemoveFile}
-                    className="flex items-center gap-2 mt-[2px]"
+                    className="flex items-center gap-1.5 h-8 text-xs mt-[2px] flex-shrink-0"
                   >
-                    <X className="h-4 w-4" />
-                    Remover
+                    <X className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="hidden sm:inline">Remover</span>
                   </Button>
                 )}
               </div>
               {selectedFile && (
-                <div className="mt-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-slate-400" />
-                    <span className="text-sm text-slate-700 dark:text-slate-300">
+                <div className="mt-2 p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <FileText className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
+                    <span className="text-xs text-slate-700 dark:text-slate-300 truncate">
                       {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
                     </span>
                   </div>
@@ -196,17 +196,19 @@ export default function PolicyTab() {
               )}
             </div>
 
-            <div className="flex justify-end">
-              <Button type="submit" disabled={isUploadingPolicy || !selectedFile}>
+            <div className="flex justify-end pt-1">
+              <Button type="submit" disabled={isUploadingPolicy || !selectedFile} size="sm" className="h-8 text-xs">
                 {isUploadingPolicy ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Enviando...
+                    <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin flex-shrink-0" />
+                    <span className="hidden sm:inline">Enviando...</span>
+                    <span className="sm:hidden">Enviando</span>
                   </>
                 ) : (
                   <>
-                    <Upload className="h-4 w-4 mr-2" />
-                    Enviar Política
+                    <Upload className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                    <span className="hidden sm:inline">Enviar Política</span>
+                    <span className="sm:hidden">Enviar</span>
                   </>
                 )}
               </Button>
@@ -218,24 +220,24 @@ export default function PolicyTab() {
       {/* Current Policy Section */}
       {currentPolicy && (
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Política Atual
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <FileText className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate">Política Atual</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs mt-0.5 truncate">
               Visualize ou remova a política de reembolso ativa
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-medium text-slate-900 dark:text-slate-100 mb-1">
+          <CardContent className="pt-0">
+            <div className="space-y-3">
+              <div className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-sm text-slate-900 dark:text-slate-100 mb-1 truncate">
                       {currentPolicy.name}
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-2 truncate">
                       Criada em {currentPolicy.created_at 
                         ? new Date(currentPolicy.created_at).toLocaleDateString('pt-BR', {
                             year: 'numeric',
@@ -246,39 +248,40 @@ export default function PolicyTab() {
                           })
                         : 'Data não disponível'}
                     </p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {currentPolicy.is_active ? (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                          <CheckCircle className="h-3 w-3 mr-1" />
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 flex-shrink-0">
+                          <CheckCircle className="h-2.5 w-2.5 mr-1" />
                           Ativa
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400 flex-shrink-0">
                           Inativa
                         </span>
                       )}
                       {currentPolicy.rules && currentPolicy.rules.trim().length > 0 ? (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 flex-shrink-0">
                           Regras processadas
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
-                          <Clock className="h-3 w-3 mr-1" />
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 flex-shrink-0">
+                          <Clock className="h-2.5 w-2.5 mr-1" />
                           Regras pendentes
                         </span>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 ml-4">
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={handleDownloadPolicy}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-1.5 h-8 text-xs"
                     >
-                      <Download className="h-4 w-4" />
-                      Visualizar PDF
+                      <Download className="h-3.5 w-3.5 flex-shrink-0" />
+                      <span className="hidden sm:inline">Visualizar PDF</span>
+                      <span className="sm:hidden">PDF</span>
                     </Button>
                     <Button
                       type="button"
@@ -286,55 +289,55 @@ export default function PolicyTab() {
                       size="sm"
                       onClick={handleDeleteClick}
                       disabled={isDeletingPolicy}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-1.5 h-8 text-xs"
                     >
-                      <Trash2 className="h-4 w-4" />
-                      Remover
+                      <Trash2 className="h-3.5 w-3.5 flex-shrink-0" />
+                      <span className="hidden sm:inline">Remover</span>
                     </Button>
                   </div>
                 </div>
               </div>
 
               {/* Rules Section */}
-              <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                 {currentPolicy.rules && currentPolicy.rules.trim().length > 0 ? (
                   <Card ref={rulesCardRef}>
                     <CardHeader 
-                      className="cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
+                      className="cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors pb-2 px-4 pt-3"
                       onClick={() => setIsRulesExpanded(!isRulesExpanded)}
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="h-5 w-5 text-green-700 dark:text-green-400" />
-                          <CardTitle className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                      <div className="flex items-center justify-between gap-2 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <Sparkles className="h-4 w-4 text-green-700 dark:text-green-400 flex-shrink-0" />
+                          <CardTitle className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
                             Regras Processadas
                           </CardTitle>
                         </div>
                         <ChevronDown 
-                          className={`h-5 w-5 text-slate-400 transition-transform duration-200 ${
+                          className={`h-4 w-4 text-slate-400 transition-transform duration-200 flex-shrink-0 ${
                             isRulesExpanded ? 'rotate-180' : ''
                           }`}
                         />
                       </div>
                     </CardHeader>
                     {isRulesExpanded && (
-                      <CardContent>
-                        <div className="flex items-start gap-3">
+                      <CardContent className="px-4 pb-4">
+                        <div className="flex items-start gap-2.5">
                           <div className="flex-shrink-0 mt-0.5">
-                            <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
-                              <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
+                            <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                              <Sparkles className="h-3 w-3 text-green-600 dark:text-green-400" />
                             </div>
                           </div>
                           <div className="flex-1 min-w-0 prose prose-sm dark:prose-invert max-w-none 
                             prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:font-semibold
-                            prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-relaxed
+                            prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-relaxed prose-p:text-xs
                             prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-semibold
-                            prose-code:text-green-600 dark:prose-code:text-green-400 prose-code:bg-green-50 dark:prose-code:bg-green-950/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono
+                            prose-code:text-green-600 dark:prose-code:text-green-400 prose-code:bg-green-50 dark:prose-code:bg-green-950/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-[10px] prose-code:font-mono
                             prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-pre:text-slate-800 dark:prose-pre:text-slate-200 prose-pre:border prose-pre:border-slate-200 dark:prose-pre:border-slate-700
                             prose-ul:text-slate-700 dark:prose-ul:text-slate-300 prose-ol:text-slate-700 dark:prose-ol:text-slate-300
                             prose-li:text-slate-700 dark:prose-li:text-slate-300
                             prose-a:text-green-600 dark:prose-a:text-green-400 prose-a:no-underline hover:prose-a:underline
-                            prose-blockquote:border-l-green-500 dark:prose-blockquote:border-l-green-400 prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400 max-h-[400px] overflow-y-auto">
+                            prose-blockquote:border-l-green-500 dark:prose-blockquote:border-l-green-400 prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400 max-h-[300px] overflow-y-auto">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                               {currentPolicy.rules}
                             </ReactMarkdown>
@@ -345,21 +348,21 @@ export default function PolicyTab() {
                   </Card>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2 mb-4">
-                      <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                      <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                    <div className="flex items-center gap-2 mb-3 min-w-0">
+                      <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                      <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
                         Regras Pendentes
                       </h4>
                     </div>
-                    <div className="p-4 bg-gradient-to-r from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-100 dark:border-amber-900/30">
-                      <div className="flex items-start gap-3">
+                    <div className="p-3 bg-gradient-to-r from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-100 dark:border-amber-900/30">
+                      <div className="flex items-start gap-2.5">
                         <div className="flex-shrink-0 mt-0.5">
-                          <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                            <Loader2 className="h-4 w-4 text-amber-600 dark:text-amber-400 animate-spin" />
+                          <div className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                            <Loader2 className="h-3 w-3 text-amber-600 dark:text-amber-400 animate-spin" />
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                          <p className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
                             As regras estão sendo processadas pela IA. Isso pode levar alguns minutos. 
                             As regras serão exibidas aqui assim que estiverem prontas.
                           </p>

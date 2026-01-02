@@ -306,28 +306,28 @@ export default function EmployeeDetail() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center space-x-3 min-w-0 flex-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/employees')}
-            className="flex items-center gap-1.5 h-8"
+            className="flex items-center gap-1.5 h-8 flex-shrink-0"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Voltar
+            <span className="hidden sm:inline">Voltar</span>
           </Button>
-          <div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 truncate">
               {employee.name}
             </h1>
-            <div className="flex items-center text-slate-600 dark:text-slate-400 mt-0.5 text-sm">
-              <Mail className="h-3.5 w-3.5 mr-1.5" />
-              {employee.email}
+            <div className="flex items-center text-slate-600 dark:text-slate-400 mt-0.5 text-sm min-w-0">
+              <Mail className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+              <span className="truncate">{employee.email}</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 flex-shrink-0">
           <span className="inline-flex items-center rounded-full border border-transparent bg-green-100 text-green-800 px-2 py-0.5 text-[10px] font-semibold dark:bg-green-900/20 dark:text-green-400">
             Ativo
           </span>
@@ -569,8 +569,8 @@ export default function EmployeeDetail() {
                           className="px-3 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
                           onClick={() => receipt.justification && toggleExpanded(receipt.id)}
                         >
-                          <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center space-x-3 flex-1">
+                          <div className="flex items-center justify-between w-full min-w-0">
+                            <div className="flex items-center space-x-3 flex-1 min-w-0">
                               <div className="w-8 h-8 bg-green-700 rounded-lg flex items-center justify-center flex-shrink-0">
                                 <FileText className="h-4 w-4 text-white" />
                               </div>
@@ -578,19 +578,19 @@ export default function EmployeeDetail() {
                                 <h3 className="font-medium text-sm text-slate-900 dark:text-slate-100 truncate">
                                   {getFileNameFromUrl(receipt.receipt_url)}
                                 </h3>
-                                <div className="flex items-center text-xs text-slate-500 dark:text-slate-400">
-                                  <span>{getFileTypeFromUrl(receipt.receipt_url)}</span>
-                                  <span className="mx-1.5">•</span>
-                                  <span className={`font-semibold ${getAmountColor(receipt.status)}`}>
+                                <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 min-w-0 overflow-hidden">
+                                  <span className="truncate">{getFileTypeFromUrl(receipt.receipt_url)}</span>
+                                  <span className="mx-1.5 flex-shrink-0">•</span>
+                                  <span className={`font-semibold ${getAmountColor(receipt.status)} flex-shrink-0`}>
                                     {formatCurrency(receipt.amount)}
                                   </span>
-                                  <span className="mx-1.5">•</span>
-                                  <span>{formatDate(receipt.created_at)}</span>
+                                  <span className="mx-1.5 flex-shrink-0">•</span>
+                                  <span className="truncate">{formatDate(receipt.created_at)}</span>
                                 </div>
                               </div>
                             </div>
                             
-                            <div className="flex items-center space-x-1.5 relative flex-shrink-0">
+                            <div className="flex items-center space-x-1.5 relative flex-shrink-0 ml-2">
                               {/* Badge de alerta piscando para pendentes */}
                               {receipt.status === 'PENDING' && (
                                 <div className="relative group">
