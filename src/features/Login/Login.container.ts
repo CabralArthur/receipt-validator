@@ -34,7 +34,6 @@ export default function LoginContainer() {
     },
     onSuccess: (data) => {
       setErrorMsg(null);
-      console.log("session:", data.session);
       // Redirecionar para a página principal após login bem-sucedido
       navigate("/");
     },
