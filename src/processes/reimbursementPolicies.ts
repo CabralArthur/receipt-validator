@@ -13,7 +13,7 @@ export interface ReimbursementPolicy {
   updated_at: string | null;
 }
 
-const WEBHOOK_URL = "https://gatewatch-n8n-sentiment-9c5a6b3c4f75.herokuapp.com/webhook/1947cfd0-6ca9-4b26-aa0f-1ccf48178348";
+const WEBHOOK_URL = "https://primary-production-6a2e.up.railway.app/webhook/1947cfd0-6ca9-4b26-aa0f-1ccf48178348";
 
 async function sendFileToWebhook(file: File, userId: string): Promise<void> {
   try {
