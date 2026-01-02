@@ -32,7 +32,7 @@ export default function LoginContainer() {
 
       return authData;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setErrorMsg(null);
       // Redirecionar para a página principal após login bem-sucedido
       navigate("/");
