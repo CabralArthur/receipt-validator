@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader
+  CardContent
 } from "@/components/ui/card";
-import Logo from "@/components/ui/logo";
+import backgroundImage from "@/assets/img/background.png";
+import logoSource from "@/assets/svg/logo-reembolso-ia.svg";
 
 import useLoginPageContainer from "./Login.container";
 export default function LoginPage() {
@@ -26,17 +25,36 @@ export default function LoginPage() {
     useLoginPageContainer() || {};
 
   return (
-    <div className="flex min-h-screen items-center justify-center flex-1">
-        <div className="mx-auto w-full max-w-sm min-w-[400px]">
-          <Card className="md:min-w-[400px]">
-            <CardHeader className="space-y-1 text-center">
-              <div className="flex justify-center mb-2">
-                <Logo size="md" />
-              </div>
-              <CardDescription>
-                Entre com seu e-mail e senha para acessar sua conta
-              </CardDescription>
-            </CardHeader>
+    <div className="flex min-h-screen bg-gray-100">
+      <div className="hidden flex-item lg:flex flex-col justify-between w-[40vw] overflow-hidden shadow-md m-4 rounded-[24px]">
+        <div className="relative h-full w-full flex flex-col justify-between rounded-[24px]">
+          <img
+            src={backgroundImage}
+            alt="Testimonial background"
+            className="absolute inset-0 w-full h-full object-cover object-center rounded-[24px]"
+          />
+          <div className="relative z-10 p-8 flex flex-col h-full justify-between rounded-[24px]">
+            <div className="flex items-center gap-2">
+                <img src={logoSource} alt="logo" className="h-10 w-[30px]" />
+                <span className="text-white text-xl font-light">Reembolso.ia</span>
+            </div>
+            <div className="flex-1 flex flex-col justify-end pb-8">
+              <p className="text-white text-2xl font-semibold mb-2">
+                Bem-vindo de volta — vamos gerenciar melhor seus reembolsos!
+              </p>
+              <span className="text-gray-200 text-sm">Retome onde você parou e continue gerenciando seus reembolsos com mais eficiência.</span>
+            </div>
+          </div>
+          <div className="absolute inset-0 bg-black/40 z-0 rounded-[24px]" />
+        </div>
+      </div>
+      <div className="flex-item flex flex-1 flex-col px-4 w-[60vw] py-12 lg:flex-none sm:px-6 lg:px-8 bg-gray-100 justify-center items-center">
+        <div className="flex flex-col items-center text-center justify-center mb-4 gap-2">
+            <span className="text-3xl font-semibold">Bem-vindo de volta</span>
+            <span className="text-sm text-muted-foreground">Vamos gerenciar melhor seus reembolsos!</span>
+        </div>
+        <div className="mx-auto max-w-lg w-[300px] md:w-[400px] flex flex-col items-center">
+          <Card className="min-w-[300px] md:min-w-[400px] w-full pt-6">
             <CardContent>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
@@ -112,7 +130,8 @@ export default function LoginPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+      </div>
+    </div>
     </div>
   );
 }
