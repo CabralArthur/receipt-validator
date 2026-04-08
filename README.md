@@ -1,84 +1,83 @@
 # refund.ai
 
-A modern React SaaS application for receipt validation and refund processing with authentication flow, React Query for data fetching, and a beautiful UI using Tailwind CSS.
+Aplicação SaaS moderna em React para validação de comprovantes e processamento de reembolsos, com fluxo de autenticação, React Query para busca de dados e interface com Tailwind CSS.
 
-## Features
+## Funcionalidades
 
-### Authentication & Authorization
-- Complete authentication flow (Login, Register, Password Reset)
-- Protected routes with React Router
-- Token-based authentication
-- Automatic token refresh
-- Session management with Zustand
+### Autenticação e autorização
+- Fluxo completo de autenticação (login, cadastro, redefinição de senha)
+- Rotas protegidas com React Router
+- Autenticação baseada em token
+- Renovação automática de token
+- Gerenciamento de sessão com Zustand
 
 ### UI/UX
-- Modern and responsive design
-- Loading states and animations
-- Form validation with Yup
-- Toast notifications with React Toastify
-- Beautiful icons with Lucide React
-- Animated components with Tailwind CSS
-- Dark mode support
+- Design moderno e responsivo
+- Estados de carregamento e animações
+- Validação de formulários com Yup
+- Notificações toast com React Toastify
+- Ícones com Lucide React
+- Componentes animados com Tailwind CSS
+- Suporte a modo escuro
 
-### Data Management
-- Efficient data fetching with React Query
-- Global state management with Zustand
-- Type-safe API calls
-- Automatic error handling
-- Request caching and invalidation
+### Gerenciamento de dados
+- Busca de dados eficiente com React Query
+- Estado global com Zustand
+- Chamadas de API tipadas
+- Tratamento automático de erros
+- Cache e invalidação de requisições
 
-### Development Experience
-- TypeScript for type safety
-- Modern React patterns and hooks
-- Code splitting and lazy loading
-- Vite for fast development and building
-- ESLint for code quality
-- Proper folder structure
+### Experiência de desenvolvimento
+- TypeScript para segurança de tipos
+- Padrões modernos de React e hooks
+- Code splitting e carregamento sob demanda
+- Vite para desenvolvimento e build rápidos
+- ESLint para qualidade de código
+- Estrutura de pastas organizada
 
-## Tech Stack
+## Stack tecnológica
 
-### Core
+### Núcleo
 - React 18
 - TypeScript
 - Vite
 - React Router v7
 
-### State Management & Data Fetching
-- Zustand (State Management)
-- TanStack Query v5 (Data Fetching)
-- Yup (Form Validation)
+### Estado e dados
+- Zustand (gerenciamento de estado)
+- TanStack Query v5 (busca de dados)
+- Yup (validação de formulários)
 
-### Styling & UI
+### Estilo e UI
 - Tailwind CSS
-- Radix UI (Headless Components)
-- Lucide React (Icons)
-- Class Variance Authority (Component Variants)
-- Tailwind Merge (Class Merging)
-- Motion (Animations)
+- Radix UI (componentes headless)
+- Lucide React (ícones)
+- Class Variance Authority (variantes de componentes)
+- Tailwind Merge (fusão de classes)
+- Motion (animações)
 
-### Development Tools
+### Ferramentas de desenvolvimento
 - ESLint
 - TypeScript
 - PostCSS
 - Autoprefixer
 
-## Getting Started
+## Como começar
 
-1. Clone the repository
+1. Clone o repositório
 
-2. Run `npm install` to install the dependencies
+2. Execute `npm install` para instalar as dependências
 
-3. Run `npm run dev` to start the development server
+3. Execute `npm run dev` para iniciar o servidor de desenvolvimento
 
-4. Run `npm run build` to build the application
+4. Execute `npm run build` para gerar a build da aplicação
 
+## Estrutura do projeto
 
-## Project Structure
-
-- `src/`: Source code
-- `src/components/`: React components
-- `src/pages/`: React pages
-- `src/processes/`: Process functions
-- `src/stores/`: Zustand stores
-- `src/types/`: TypeScript types
-- `src/utils/`: Utility functions
+- `src/`: Código-fonte
+- `src/components/`: Componentes React
+- `src/pages/`: Páginas React
+- `src/processes/`: Funções de processo
+- `src/stores/`: Stores Zustand
+- `src/types/`: Tipos TypeScript
+- `src/utils/`: Funções utilitárias
